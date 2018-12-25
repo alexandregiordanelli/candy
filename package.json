@@ -11,10 +11,10 @@
     "replace-in-file": "^3.4.0"
   },
   "scripts": {
+    "emulator": "emulator @Nexus_5X_API_28",
     "android": "react-native run-android",
     "ios": "react-native run-ios",
     "apk": "cd android && ./gradlew assembleRelease",
-    "rename": "node ./bin/rename.js",
     "start": "react-native start",
     "test": "jest"
   },
