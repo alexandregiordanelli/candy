@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "1013531303372",
+    "firebase_url": "https://lunericandy.firebaseio.com",
+    "project_id": "lunericandy",
+    "storage_bucket": "lunericandy.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1013531303372:android:076dff7988244384",
+        "android_client_info": {
+          "package_name": "com.luneri.candy"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1013531303372-dm4f7rqm2c4r4ibava4oeh2gikadrksm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAcuoP-aeI2wI0G2v8Q_IX4xjhXZMfSWik"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
