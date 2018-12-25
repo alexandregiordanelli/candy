@@ -27,10 +27,15 @@ import io.invertase.firebase.notifications.RNFirebaseNotificationsPackage;
 import io.invertase.firebase.perf.RNFirebasePerformancePackage;
 import io.invertase.firebase.storage.RNFirebaseStoragePackage;
 
+import com.reactnativenavigation.NavigationApplication;
+import com.reactnativenavigation.react.NavigationReactNativeHost;
+import com.reactnativenavigation.react.ReactGateway;
+
+
 import java.util.Arrays;
 import java.util.List;
 
-public class MainApplication extends Application implements ReactApplication {
+public class MainApplication extends NavigationApplication {
 
   private final ReactNativeHost mReactNativeHost = new ReactNativeHost(this) {
     @Override
@@ -42,7 +47,6 @@ public class MainApplication extends Application implements ReactApplication {
     @Override
     protected List<ReactPackage> getPackages() {
       return Arrays.asList(
-        new MainReactPackage(),
         new RNFirebasePackage(),
         // add/remove these packages as appropriate
         new RNFirebaseAdMobPackage(),
@@ -69,9 +73,55 @@ public class MainApplication extends Application implements ReactApplication {
     }
   };
 
+  @SuppressLint("MissingPermission")
+  protected List<ReactPackage> getPackages() {
+    return Arrays.asList(
+      new RNFirebasePackage(),
+      // add/remove these packages as appropriate
+      new RNFirebaseAdMobPackage(),
+      new RNFirebaseAnalyticsPackage(),
+      new RNFirebaseAuthPackage(),
+      new RNFirebaseRemoteConfigPackage(),
+      new RNFirebaseCrashlyticsPackage(),
+      new RNFirebaseDatabasePackage(),
+      new RNFirebaseFirestorePackage(),
+      new RNFirebaseFunctionsPackage(),
+      new RNFirebaseInstanceIdPackage(),
+      new RNFirebaseInvitesPackage(),
+      new RNFirebaseLinksPackage(),
+      new RNFirebaseMessagingPackage(),
+      new RNFirebaseNotificationsPackage(),
+      new RNFirebasePerformancePackage(),
+      new RNFirebaseStoragePackage()
+    );
+  }
+
+  @Override
+  protected ReactGateway createReactGateway() {
+    ReactNativeHost host = new NavigationReactNativeHost(this, isDebug(), createAdditionalReactPackages()) {
+
+      @Override
+      protected String getJSMainModuleName() {
+        return "index";
+      }
+    };
+
+    return new ReactGateway(this, isDebug(), host);
+  }
+
+  @Override
+  public boolean isDebug() {
+    return BuildConfig.DEBUG;
+  }
+
   @Override
   public ReactNativeHost getReactNativeHost() {
     return mReactNativeHost;
+  }
+
+  @Override
+  public List<ReactPackage> createAdditionalReactPackages() {
+    return getPackages();
   }
 
   @Override

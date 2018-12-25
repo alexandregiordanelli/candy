@@ -105,13 +105,15 @@ android {
   dexOptions {
     javaMaxHeapSize "4g"
   }
+
   compileSdkVersion rootProject.ext.compileSdkVersion
-  buildToolsVersion rootProject.ext.buildToolsVersion
+  buildToolsVersion '28.0.3'
 
   defaultConfig {
     applicationId "com.luneri.candy"
     minSdkVersion rootProject.ext.minSdkVersion
     targetSdkVersion rootProject.ext.targetSdkVersion
+    missingDimensionStrategy "RNN.reactNativeVersion", "reactNative56"
     versionCode 1
     versionName "1.0"
     ndk {
@@ -119,6 +121,10 @@ android {
     }
     // because of firestore:
     multiDexEnabled true
+  }
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_1_8
+    targetCompatibility JavaVersion.VERSION_1_8
   }
   splits {
     abi {
@@ -155,8 +161,13 @@ android {
 
 dependencies {
   //noinspection GradleDynamicVersion
-  implementation "com.facebook.react:react-native:+"
   implementation fileTree(dir: "libs", include: ["*.jar"])
+  implementation "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"
+  implementation "com.facebook.react:react-native:+"  // From node_modules
+
+  implementation project(':react-native-navigation')
+
+  implementation 'com.android.support:design:27.1.0'
 
   /* ----------------------------
    *    REACT NATIVE FIREBASE
