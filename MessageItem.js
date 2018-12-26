@@ -18,25 +18,26 @@ export default class extends Component {
     let badge = null
     const notifications = this.props.room.notifications[this.props.userId]
     if(notifications)
-      badge = <Text>{notifications}</Text>
+      badge =  <View style={{borderRadius: 10, backgroundColor: 'blue', minWidth: 20, alignItems: 'center'}}><Text style={{color: 'white'}}>{notifications}</Text></View>
     return (
         <ListItem noBorder style={{paddingRight: 0, paddingTop: 0, paddingBottom: 0 }} onPress={() => {
           Navigation.push(this.props.componentId, { component: { name: 'Chat', passProps: {room: this.props.room}, options: { bottomTabs: { visible: false, drawBehind: true, animate: true } } }, });
         }}>
-          <View style={{flexDirection: 'row'}}>
-            <Image style={{width: 56, height: 56, borderRadius: 28, marginLeft: 16}} source={{ uri: this.props.room.anotherUser.avatar }} /> 
+          <View style={{flexDirection: 'row', paddingTop: 8, paddingBottom: 8}}>
+            <Image style={{width: 56, height: 56, borderRadius: 28, marginLeft: 16, marginRight: 8}} source={{ uri: this.props.room.anotherUser.avatar }} /> 
             <View style={{flexDirection: 'row', flex: 1, borderBottomWidth: 1, borderBottomColor: '#ddd'}}>
-              <View style={{flex: 1, justifyContent:'flex-start', alignItems: 'flex-start'}}>
-                <Text>{this.props.room.anotherUser.name}</Text>
-                <Text>{this.props.room.lastMessage}</Text>
+
+              <View style={{flex: 1}}>
+                <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+                  <Text style={{fontWeight: '600'}}>{this.props.room.anotherUser.name}</Text>
+                  <Text>{Moment(this.props.room.updatedAt).fromNow()}</Text>
+                </View>
+                <View style={{flex: 1, flexDirection: 'row', justifyContent:'space-between', alignItems: 'center'}}>
+                  <Text numberOfLines={2} style={{flex: 1}}>{this.props.room.lastMessage}</Text>{badge}
+                </View>
               </View>
-              <View style={{flexDirection: 'row', justifyContent:'flex-end', alignItems: 'flex-start'}}>
-                  <View style={{alignItems: 'flex-end', backgroundColor: 'yellow'}}>
-                    <Text>{Moment(this.props.room.updatedAt).fromNow()}</Text>
-                    {badge}
-                  </View>
-                  <Icon style={{alignSelf: 'center', marginRight: 16}} ios='ios-arrow-forward' android="md-arrow-forward"/>
-              </View>
+
+              <Icon style={{alignSelf: 'center',marginLeft: 8, marginRight: 16}} ios='ios-arrow-forward' android="md-arrow-forward"/>
             </View>
           </View>
         </ListItem>
