@@ -14,13 +14,13 @@ import {
   } from 'react-native'
   import Moment from 'moment'
   import 'moment/locale/pt-br'
-  import { Navigation } from "react-native-navigation";
+  import { Navigation } from "react-native-navigation"
 
-export default class MessageItem extends Component {
+export default class extends Component {
   render() {
     return (
         <ListItem avatar noBorder onPress={() => {
-          Navigation.push(this.props.componentId, { component: { name: 'Chat', passProps: {user: this.props.user, room: this.props.room}, options: { bottomTabs: { visible: false, drawBehind: true, animate: true } } }, });
+          Navigation.push(this.props.componentId, { component: { name: 'Chat', passProps: {room: this.props.room}, options: { bottomTabs: { visible: false, drawBehind: true, animate: true } } }, });
         }}>
             <Left style={{marginLeft: 12}}>
               <Thumbnail source={{ uri: this.props.room.anotherUser.avatar }} /> 

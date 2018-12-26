@@ -1,34 +1,34 @@
-import React from "react";
+import React from "react"
 import { ListView } from 'react-native'
 import {
   Button,
-  Text,
   Container,
-  Body,
   Content,
-  Header,
-  Left,
-  Right,
   Icon,
   List,
-  ListItem,
-  Title,
-  Input,
-  Item,
-  Label,
-  Thumbnail,
-  Badge
+  View,
+  Text,
 } from "native-base";
 import MessageItem from './MessageItem'
 import Firechat from './Firechat'
+import { connect } from 'react-redux'
 
+@connect(state => ({rooms: state.rooms}))
 export default class extends React.Component {
+  static get options() {
+    return {
+      topBar: {
+        title: {
+          text: 'Messages'
+        },
+      }
+    }
+  }
 
   constructor(props) {
     super(props)
     this.state = {
-      isReady: false,
-      rooms: []
+      rooms: [],
     }
     this.ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
   }
@@ -38,27 +38,24 @@ export default class extends React.Component {
     Firechat.shared.deleteRoom(data.id)
   }
 
-  componentWillMount(){
-    this.unsubscribe = Firechat.shared.getOnAuth(rooms => {
-      this.setState({isReady: true, rooms, user: { _id: Firechat.shared.userId}})
-    }) 
+  componentDidMount(){ 
+    this.unsubscribe = Firechat.shared.getRooms(rooms => {
+      this.props.dispatch({type: "ADD_ROOMS", rooms})
+    })
   }
-
-  componentWillUnmount(){
-    if(this.unsubscribe)
-      this.unsubscribe()
+  
+  componentWillUnmount() {
+    this.unsubscribe()
   }
 
   render() {
-    if (!this.state.isReady)
-      null
     return (
       <Container>
         <Content>
           <List
             rightOpenValue={-75}
-            dataSource={this.ds.cloneWithRows(this.state.rooms)}
-            renderRow={data => <MessageItem componentId={this.props.componentId} user={this.state.user} room={data} />}
+            dataSource={this.ds.cloneWithRows(this.props.rooms)}
+            renderRow={data => <MessageItem componentId={this.props.componentId} room={data} />}
             renderRightHiddenRow={(data, secId, rowId, rowMap) =>
               <Button full danger onPress={() => this.deleteRow(data, secId, rowId, rowMap)}>
                 <Icon active name="trash" />

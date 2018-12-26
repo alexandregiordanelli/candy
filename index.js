@@ -1,48 +1,25 @@
-import { Navigation } from "react-native-navigation";
-import Messages from "./Messages";
-import Chat from "./Chat";
-import App from "./App";
-import Screen from "./Screen";
-import Home from "./Home";
+import { Navigation } from "react-native-navigation"
+import { createStore, combineReducers } from 'redux'
+import { Provider } from "react-redux"
+import Login from "./Login"
+import Messages from "./Messages"
+import Chat from "./Chat"
+import Screen from "./Screen"
 
-Navigation.registerComponent(`Home`, () => Home);
-Navigation.registerComponent(`Screen`, () => Screen);
-Navigation.registerComponent(`Messages`, () => Messages);
-Navigation.registerComponent(`Chat`, () => Chat);
-Navigation.registerComponent(`App`, () => App);
+const rooms = (state = [], action) => {
+  if(action.type == 'ADD_ROOMS')
+    return action.rooms
+  return state
+}
+
+const store = createStore(combineReducers({rooms}))
+
+Navigation.registerComponentWithRedux(`Main`, () => Main, Provider, store) // decide the view
+Navigation.registerComponentWithRedux(`Login`, () => Login, Provider, store) //route 1
+Navigation.registerComponentWithRedux(`Messages`, () => Messages, Provider, store) //route 2
+Navigation.registerComponentWithRedux(`Chat`, () => Chat, Provider, store) //route 2
+Navigation.registerComponentWithRedux(`Screen`, () => Screen, Provider, store) //route 2
 
 Navigation.events().registerAppLaunchedListener(() => {
-  Navigation.setRoot({
-    root: {
-      bottomTabs: {
-        id: 'BottomTabsId',
-        children: [
-          {
-            stack: {
-              children: [{
-                component: {
-                  name: 'Messages',
-                  options: {
-                    bottomTab: {
-                      icon: require('./signin.png')
-                    }
-                  }
-                },
-              }]
-            }
-          },
-          {
-            component: {
-              name: 'App',
-              options: {
-                bottomTab: {
-                  icon: require('./signup.png')
-                }
-              }
-            },
-          },
-        ],
-      }
-    }
-  })
+  //Firechat.shared
 })

@@ -22,11 +22,14 @@
     "preset": "react-native"
   },
   "dependencies": {
+    "@babel/plugin-proposal-decorators": "^7.2.3",
     "native-base": "^2.10.0",
     "react": "16.5.0",
     "react-native": "0.57.1",
     "react-native-firebase": "^5.1.1",
     "react-native-gifted-chat": "^0.5.0",
-    "react-native-navigation": "^2.3.1"
+    "react-native-navigation": "^2.3.1",
+    "react-redux": "^6.0.0",
+    "redux": "^4.0.1"
   }
 }

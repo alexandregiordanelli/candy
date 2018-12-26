@@ -1,4 +1,6 @@
 import firebase from 'react-native-firebase'
+import { Navigation } from "react-native-navigation"
+import { goLogin, goHome } from './navigation'
 
 class Firechat {
 
@@ -8,27 +10,23 @@ class Firechat {
     this.roomsRef = this.db.collection("rooms")
     this.usersRef = this.db.collection("users")
 
-    firebase.auth().signInAnonymously()
-
-  }
-
-  getOnAuth(cb){
-    return firebase.auth().onAuthStateChanged(user => {
-      this.userId = null
+    firebase.auth().onAuthStateChanged(user => {
       if(user){
+        console.log("user.uid", user.uid)
         this.userId = user.uid
-        if(user.uid == "E4Hem1eDYcgudv5pEzTQrThGO2q2")
+        if(user.uid == "0S9g0nptjZUTCe7CTyIIdgm8uWh2")
           this.userId = "NLXyeIMnS3QriEQ9vWH772Ltdn12"
-        
-        //this.createUser().then(() => {
-          //this.createRoom("ERd3rVuyasaZscuLCIFjz90O7tQ2")
-          this.unsubscribe = this.getRooms(cb)
-        //})
+        goHome()
       } else {
-        if(this.unsubscribe)
-          this.unsubscribe()
+        console.log("user.uid", "null")
+        this.userId = null
+        goLogin()
       }
     })
+  }
+
+  signOut(){
+    firebase.auth().signOut()
   }
 
   createFakeUser(){
@@ -188,6 +186,7 @@ class Firechat {
     })
   }
 }
-
-Firechat.shared = new Firechat()
+Navigation.events().registerAppLaunchedListener(() => {
+  Firechat.shared = new Firechat()
+})
 export default Firechat

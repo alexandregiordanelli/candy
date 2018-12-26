@@ -6,25 +6,26 @@ import {
   StyleSheet,
 } from 'react-native'
 
-import {Navigation} from 'react-native-navigation';
+import Firechat from './Firechat'
 
-export default class Screen2 extends React.Component {
+export default class Screen extends React.Component {
   static get options() {
     return {
       topBar: {
         title: {
-          text: 'Screen 2'
+          text: 'Screen'
         },
       }
     };
   }
+
   render() {
     return (
       <View style={styles.container}>
-        <Text>Screen 2</Text>
+        <Text>Screen</Text>
         <Button
-          onPress={() => Navigation.pop(this.props.componentId)}
-          title="Go Back"
+          onPress={() => Firechat.shared.signOut()}
+          title="Sair"
         />
       </View>
     )

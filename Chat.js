@@ -24,6 +24,15 @@ import "moment"
 import "moment/locale/pt-br"
 
 export default class extends React.Component {
+  static get options() {
+    return {
+      topBar: {
+        title: {
+          text: 'Chat'
+        },
+      }
+    };
+  }
 
   constructor(props) {
     super(props);
@@ -50,7 +59,7 @@ export default class extends React.Component {
     })
   }
 
-  componentWillMount(){
+  componentDidMount(){
     this.room = this.props.room
 
     Firechat.shared.getUser().then(user => {
@@ -156,9 +165,9 @@ export default class extends React.Component {
           loadEarlier={this.state.loadEarlier}
           onLoadEarlier={this.onLoadEarlier}
           isLoadingEarlier={this.state.isLoadingEarlier}
-          user={this.props.user}
+          user={{_id: Firechat.shared.userId}}
           locale={'pt-br'}
-          //enderActions={this.renderCustomActions}
+          //renderActions={this.renderCustomActions}
           renderBubble={this.renderBubble}
           renderSystemMessage={this.renderSystemMessage}
           //renderCustomView={this.renderCustomView}
