@@ -12,7 +12,7 @@
   },
   "scripts": {
     "emulator": "emulator @Nexus_5X_API_28",
-    "android": "react-native run-android",
+    "android": "cd ./android && ./gradlew app:assembleDebug && ./gradlew installDebug",
     "ios": "react-native run-ios",
     "apk": "cd android && ./gradlew assembleRelease",
     "start": "react-native start",
@@ -22,9 +22,11 @@
     "preset": "react-native"
   },
   "dependencies": {
+    "native-base": "^2.10.0",
     "react": "16.5.0",
     "react-native": "0.57.1",
     "react-native-firebase": "^5.1.1",
+    "react-native-gifted-chat": "^0.5.0",
     "react-native-navigation": "^2.3.1"
   }
 }
