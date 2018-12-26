@@ -1,7 +1,7 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
   ext {
-    buildToolsVersion = "27.0.3"
+    buildToolsVersion = "28.0.3"
     minSdkVersion = 19
     compileSdkVersion = 27
     targetSdkVersion = 26
@@ -48,15 +48,17 @@ task wrapper(type: Wrapper) {
 
 subprojects { subproject ->
   afterEvaluate {
-           if ((subproject.plugins.hasPlugin('android') || subproject.plugins.hasPlugin('android-library'))) {
+    if ((subproject.plugins.hasPlugin('android') || subproject.plugins.hasPlugin('android-library'))) {
       android {
         variantFilter { variant ->
-                             def names = variant.flavors*.name
-                             if (names.contains("reactNative51") || names.contains("reactNative55")) {
-                                   setIgnore(true)
-                              }
-                         }
-                   }
-              }
+          def names = variant.flavors*.name
+          // To check for a certain build type, use variant.buildType.name == "<buildType>"
+          if (names.contains("reactNative51") || names.contains("reactNative55") || names.contains("reactNative56")) {
+            // Gradle ignores any variants that satisfy the conditions above.
+            setIgnore(true)
+          }
         }
+      }
+    }
   }
+}

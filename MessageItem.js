@@ -33,7 +33,7 @@ export default class extends Component {
                 <View style={{alignItems: 'flex-end',}}>
                   <Text note>{Moment(this.props.room.updatedAt).fromNow()}</Text>
                   {/* <TimeAgo note live={false} component={Text} date={this.props.room.updatedAt} formatter={buildFormatter(ptStrings)} /> */}
-                  <Badge><Text>2</Text></Badge>
+                  <Badge><Text>{this.props.room.notifications[this.props.userId]}</Text></Badge>
                 </View>
                 <Icon style={{marginLeft: 10, alignSelf: 'center',}} ios='ios-arrow-forward' android="md-arrow-forward"/>
             </Right>

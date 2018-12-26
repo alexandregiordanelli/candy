@@ -55,7 +55,7 @@ export default class extends React.Component {
           <List
             rightOpenValue={-75}
             dataSource={this.ds.cloneWithRows(this.props.rooms)}
-            renderRow={data => <MessageItem componentId={this.props.componentId} room={data} />}
+            renderRow={data => <MessageItem componentId={this.props.componentId} room={data} userId={Firechat.shared.userId} />}
             renderRightHiddenRow={(data, secId, rowId, rowMap) =>
               <Button full danger onPress={() => this.deleteRow(data, secId, rowId, rowMap)}>
                 <Icon active name="trash" />

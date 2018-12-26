@@ -1,6 +1,10 @@
 import firebase from 'react-native-firebase'
 import { Navigation } from "react-native-navigation"
 import { goLogin, goHome } from './navigation'
+import DeviceInfo from 'react-native-device-info'
+import {Platform } from 'react-native'
+
+const isEmulator = DeviceInfo.isEmulator()
 
 class Firechat {
 
@@ -12,13 +16,21 @@ class Firechat {
 
     firebase.auth().onAuthStateChanged(user => {
       if(user){
-        console.log("user.uid", user.uid)
         this.userId = user.uid
-        if(user.uid == "0S9g0nptjZUTCe7CTyIIdgm8uWh2")
-          this.userId = "NLXyeIMnS3QriEQ9vWH772Ltdn12"
-        goHome()
+        if(isEmulator){
+          if(Platform.OS == "ios"){
+            this.userId = "NLXyeIMnS3QriEQ9vWH772Ltdn12"
+          } else {  //android
+            this.userId = "0S9g0nptjZUTCe7CTyIIdgm8uWh2"
+          }
+        } 
+        else { //device
+          this.userId = "ua2ezI5QJceHg5XhX17kiJvEY132"
+        }
+        this.createUser().then(user => {
+          goHome()
+        })
       } else {
-        console.log("user.uid", "null")
         this.userId = null
         goLogin()
       }
@@ -29,22 +41,24 @@ class Firechat {
     firebase.auth().signOut()
   }
 
-  createFakeUser(){
-    fetch("https://randomuser.me/api/").then(e => e.json()).then(e => {
-      const data = e.results[0]
-      this.usersRef.add({
-        name: data.name.first,
-        avatar: data.picture.medium
-      })
-    })
-  }
-
   createUser(){
-    return fetch("https://randomuser.me/api/").then(e => e.json()).then(e => {
-      const data = e.results[0]
-      return this.usersRef.doc(this.userId).set({
-        name: data.name.first,
-        avatar: data.picture.medium
+    return new Promise(resolve => {
+      this.getUser().then(user => {
+        if(!user){
+          fetch("https://randomuser.me/api/").then(e => e.json()).then(e => {
+            const data = e.results[0]
+            user = {
+              name: data.name.first,
+              avatar: data.picture.medium
+            }
+            this.usersRef.doc(this.userId).set(user).then(()=>{
+              user._id = this.userId
+              resolve(user)
+            })
+          })
+        } else {
+          resolve(user)
+        }
       })
     })
   }
@@ -54,8 +68,13 @@ class Firechat {
   }
 
   getUser(){
-    return this.usersRef.doc(this.userId).get().then(doc => {
-      return {...doc.data(), _id: doc.id}
+    return new Promise(resolve => {
+      this.usersRef.doc(this.userId).get().then(doc => {
+        if(doc.exists)
+          resolve({...doc.data(), _id: doc.id})
+        else
+          resolve(false)
+      })
     })
   }
 
@@ -82,18 +101,25 @@ class Firechat {
     if(cursor)
       ref = ref.startAfter(cursor)
     return ref.limit(nMax).get().then(querySnapshot => { 
+      let batch = this.db.batch()       
       let cursor = querySnapshot.docs[querySnapshot.docs.length-1]
       let messages = []
       querySnapshot.forEach(doc => {
         const data = doc.data()
-        const message = {
+        let message = {
           ...data,
           _id: doc.id,
           createdAt: data.createdAt,
           sent: true
         }
+        if(data.user._id != this.userId && !data.received){
+          batch.update(doc.ref, {received: true})
+          this.updateRoom(roomId)
+          message.received = true
+        }
         messages.push(message)
       })
+      batch.commit()
       if(messages.length < nMax)
         cursor = null
       return {
@@ -108,6 +134,7 @@ class Firechat {
     if(cursor)
       ref = ref.endBefore(cursor)
     return ref.onSnapshot(querySnapshot => { 
+      let batch = this.db.batch()   
       let messages = []
       querySnapshot.forEach(doc => {
         const sent = !doc.metadata.hasPendingWrites
@@ -118,8 +145,15 @@ class Firechat {
           createdAt: data.createdAt,
           sent
         }
+        if(data.user._id != this.userId && !data.received){
+          batch.update(doc.ref, {received: true})
+          this.updateRoom(roomId)
+          message.received = true
+        }
+
         messages.push(message)
       })
+      batch.commit()
       cb(messages)
     })
   }
@@ -133,6 +167,10 @@ class Firechat {
             [this.userId]: true,
             [uid]: true,
           },
+          notifications: {
+            [this.userId]: 0,
+            [uid]: 0,
+          },
           createdAt: timestamp,
           updatedAt: timestamp,
           lastMessage: ""
@@ -141,10 +179,29 @@ class Firechat {
     })
   }
 
-  updateRoom(roomId, lastMessage){
-    this.roomsRef.doc(roomId).update({
-      updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-      lastMessage
+  updateRoom(roomId, lastMessage = null){
+    const ref = this.roomsRef.doc(roomId)
+
+    this.db.runTransaction(transaction => {
+      return transaction.get(ref).then(doc => {
+          const data = doc.data()
+          let notifications = data.notifications
+          for(let user in data.users){
+            if(user != this.userId)
+              if(lastMessage)
+                notifications[user]++
+              else
+                if(notifications[this.userId] > 0)
+                  notifications[this.userId]--
+          }
+          let room = { 
+            notifications,
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+          }
+          if(lastMessage)
+            room.lastMessage = lastMessage
+          transaction.update(ref, room)
+      })
     })
   }
 
@@ -165,6 +222,7 @@ class Firechat {
                 let room = {
                   anotherUser: anotherUser.data()
                 }
+                room.notifications = data.notifications
                 room.lastMessage = data.lastMessage
                 room.updatedAt = data.updatedAt
                 room.anotherUser.id = anotherUser.id

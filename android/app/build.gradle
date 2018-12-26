@@ -160,6 +160,7 @@ android {
 }
 
 dependencies {
+  implementation project(':react-native-device-info')
     compile project(':react-native-firebase')
   //noinspection GradleDynamicVersion
   implementation fileTree(dir: "libs", include: ["*.jar"])

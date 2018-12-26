@@ -38,8 +38,7 @@ export default class extends React.Component {
     super(props);
     this.state = {
       messages: [],
-      isReady: false,
-      loadEarlier: true,
+      loadEarlier: false,
       typingText: null,
       isLoadingEarlier: false
     }
@@ -61,13 +60,8 @@ export default class extends React.Component {
 
   componentDidMount(){
     this.room = this.props.room
-
-    Firechat.shared.getUser().then(user => {
-      this.setState({user})
-    })
-
+    
     this.onLoadEarlier(cursor => {
-  
       this.unsubscribe = Firechat.shared.getOnMessages(this.room.id, cursor, messages => {
         this.setState(previousState => {
           return {

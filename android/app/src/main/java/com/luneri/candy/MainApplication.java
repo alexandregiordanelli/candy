@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.learnium.RNDeviceInfo.RNDeviceInfo;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
@@ -47,6 +48,7 @@ public class MainApplication extends NavigationApplication {
     @Override
     protected List<ReactPackage> getPackages() {
       return Arrays.asList(
+        new RNDeviceInfo(),
         new RNFirebasePackage(),
         // add/remove these packages as appropriate
         new RNFirebaseAdMobPackage(),
@@ -76,6 +78,7 @@ public class MainApplication extends NavigationApplication {
   @SuppressLint("MissingPermission")
   protected List<ReactPackage> getPackages() {
     return Arrays.asList(
+      new RNDeviceInfo(),
       new RNFirebasePackage(),
       // add/remove these packages as appropriate
       new RNFirebaseAdMobPackage(),
