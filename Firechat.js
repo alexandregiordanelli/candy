@@ -21,7 +21,7 @@ class Firechat {
           if(Platform.OS == "ios"){
             this.userId = "NLXyeIMnS3QriEQ9vWH772Ltdn12"
           } else {  //android
-            this.userId = "0S9g0nptjZUTCe7CTyIIdgm8uWh2"
+            this.userId = "NLXyeIMnS3QriEQ9vWH772Ltdn12"
           }
         } 
         else { //device
@@ -147,13 +147,14 @@ class Firechat {
         }
         if(data.user._id != this.userId && !data.received){
           batch.update(doc.ref, {received: true})
-          this.updateRoom(roomId)
           message.received = true
         }
 
         messages.push(message)
       })
-      batch.commit()
+      batch.commit().then(()=>{
+        this.updateRoom(roomId)
+      })
       cb(messages)
     })
   }
@@ -192,7 +193,7 @@ class Firechat {
                 notifications[user]++
               else
                 if(notifications[this.userId] > 0)
-                  notifications[this.userId]--
+                  notifications[this.userId] = 0
           }
           let room = { 
             notifications,

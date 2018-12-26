@@ -18,7 +18,7 @@ export default class extends Component {
     let badge = null
     const notifications = this.props.room.notifications[this.props.userId]
     if(notifications)
-      badge =  <View style={{borderRadius: 10, backgroundColor: 'blue', minWidth: 20, alignItems: 'center'}}><Text style={{color: 'white'}}>{notifications}</Text></View>
+      badge =  <View style={{borderRadius: 10, backgroundColor: '#007aff', minWidth: 20, alignItems: 'center'}}><Text style={{color: 'white'}}>{notifications}</Text></View>
     return (
         <ListItem noBorder style={{paddingRight: 0, paddingTop: 0, paddingBottom: 0 }} onPress={() => {
           Navigation.push(this.props.componentId, { component: { name: 'Chat', passProps: {room: this.props.room}, options: { bottomTabs: { visible: false, drawBehind: true, animate: true } } }, });
