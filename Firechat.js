@@ -17,6 +17,9 @@ class Firechat {
       this.userId = null
       if(user){
         this.userId = user.uid
+        if(user.uid == "E4Hem1eDYcgudv5pEzTQrThGO2q2")
+          this.userId = "NLXyeIMnS3QriEQ9vWH772Ltdn12"
+        
         //this.createUser().then(() => {
           //this.createRoom("ERd3rVuyasaZscuLCIFjz90O7tQ2")
           this.unsubscribe = this.getRooms(cb)
