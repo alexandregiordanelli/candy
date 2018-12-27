@@ -1,10 +1,11 @@
 import { Navigation } from "react-native-navigation"
 import { createStore, combineReducers } from 'redux'
 import { Provider } from "react-redux"
-import Login from "./Login"
-import Messages from "./Messages"
-import Chat from "./Chat"
-import Screen from "./Screen"
+import Firechat from "./src/Firechat"
+import Login from "./src/LoginScreen/Login"
+import Messages from "./src/MessagesScreen/Messages"
+import Chat from "./src/ChatScreen/Chat"
+import Profile from "./src/ProfileScreen/Profile"
 
 const rooms = (state = [], action) => {
   if(action.type == 'ADD_ROOMS')
@@ -12,14 +13,26 @@ const rooms = (state = [], action) => {
   return state
 }
 
-const store = createStore(combineReducers({rooms}))
+const messages = (state = [], action) => { 
+  if(action.type == 'ADD_MESSAGES')
+    return action.messages
+  return state
+}
 
-Navigation.registerComponentWithRedux(`Main`, () => Main, Provider, store) // decide the view
-Navigation.registerComponentWithRedux(`Login`, () => Login, Provider, store) //route 1
-Navigation.registerComponentWithRedux(`Messages`, () => Messages, Provider, store) //route 2
-Navigation.registerComponentWithRedux(`Chat`, () => Chat, Provider, store) //route 2
-Navigation.registerComponentWithRedux(`Screen`, () => Screen, Provider, store) //route 2
+const root = (state = "", action) => { //importante string vazia, deixar o firebase auth decidir
+  if(action.type == 'SET_ROOT')
+    return action.root
+  return state
+}
+
+const store = createStore(combineReducers({rooms, messages, root}))
+
+Navigation.registerComponentWithRedux('Login', () => Login, Provider, store)
+Navigation.registerComponentWithRedux('Messages', () => Messages, Provider, store)
+Navigation.registerComponentWithRedux('Chat', () => Chat, Provider, store)
+Navigation.registerComponentWithRedux('Profile', () => Profile, Provider, store)
 
 Navigation.events().registerAppLaunchedListener(() => {
-  //Firechat.shared
+  new Firechat(store)
 })
+

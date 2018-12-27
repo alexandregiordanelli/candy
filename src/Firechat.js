@@ -1,14 +1,17 @@
 import firebase from 'react-native-firebase'
-import { Navigation } from "react-native-navigation"
 import { goLogin, goHome } from './navigation'
 import DeviceInfo from 'react-native-device-info'
-import {Platform } from 'react-native'
+import { Platform } from 'react-native'
 
 const isEmulator = DeviceInfo.isEmulator()
 
-class Firechat {
+export default class Firechat {
 
-  constructor() {
+  static instance
+
+  constructor(store) {
+    if(Firechat.instance)
+      return Firechat.instance
     this.db = firebase.firestore()
     this.db.settings({ timestampsInSnapshots: true })
     this.roomsRef = this.db.collection("rooms")
@@ -27,14 +30,23 @@ class Firechat {
         else { //device
           this.userId = "ua2ezI5QJceHg5XhX17kiJvEY132"
         }
-        this.createUser().then(user => {
-          goHome()
-        })
+
+        if(store.getState().root != "HomeRoot"){
+          goHome().then(navigation => {
+            store.dispatch({type: "SET_ROOT", root: navigation.root.id})
+          })
+        }
       } else {
         this.userId = null
-        goLogin()
+        if(store.getState().root != "LoginRoot"){
+          goLogin().then(navigation => {
+            store.dispatch({type: "SET_ROOT", root: navigation.root.id})
+          })
+        }
       }
     })
+
+    Firechat.instance = this
   }
 
   signOut(){
@@ -97,66 +109,47 @@ class Firechat {
   }
 
   getMessages(roomId, nMax, cursor){
-    let ref = this.roomsRef.doc(roomId).collection("messages").orderBy("createdAt", "desc")
-    if(cursor)
-      ref = ref.startAfter(cursor)
-    return ref.limit(nMax).get().then(querySnapshot => { 
-      let batch = this.db.batch()       
-      let cursor = querySnapshot.docs[querySnapshot.docs.length-1]
-      let messages = []
-      querySnapshot.forEach(doc => {
-        const data = doc.data()
-        let message = {
-          ...data,
-          _id: doc.id,
-          createdAt: data.createdAt,
-          sent: true
-        }
-        if(data.user._id != this.userId && !data.received){
-          batch.update(doc.ref, {received: true})
-          this.updateRoom(roomId)
-          message.received = true
-        }
-        messages.push(message)
-      })
-      batch.commit()
-      if(messages.length < nMax)
-        cursor = null
-      return {
-        messages,
-        cursor
-      }
-    })
+    const ref = this.roomsRef.doc(roomId).collection("messages").orderBy("createdAt", "desc").startAfter(cursor).limit(nMax)
+    return ref.get().then(querySnapshot => this.parseSnapshot(querySnapshot, roomId, nMax))
   }
 
-  getOnMessages(roomId, cursor, cb){
-    let ref = this.roomsRef.doc(roomId).collection("messages").orderBy("createdAt", "desc")
-    if(cursor)
-      ref = ref.endBefore(cursor)
-    return ref.onSnapshot(querySnapshot => { 
-      let batch = this.db.batch()   
-      let messages = []
-      querySnapshot.forEach(doc => {
-        const sent = !doc.metadata.hasPendingWrites
-        const data = doc.data({serverTimestamps: 'estimate'})
-        const message = {
-          ...data,
-          _id: doc.id,
-          createdAt: data.createdAt,
-          sent
-        }
-        if(data.user._id != this.userId && !data.received){
-          batch.update(doc.ref, {received: true})
-          message.received = true
-        }
+  getOnMessages(roomId, nMax, cb){
+    const ref = this.roomsRef.doc(roomId).collection("messages").orderBy("createdAt", "desc").limit(nMax)
+    return ref.onSnapshot(querySnapshot => this.parseSnapshot(querySnapshot, roomId, nMax, cb))
+  }
 
-        messages.push(message)
-      })
-      batch.commit().then(()=>{
-        this.updateRoom(roomId)
-      })
-      cb(messages)
+  parseSnapshot(querySnapshot, roomId, nMax, cb){
+    const batch = this.db.batch()
+    let cursor = querySnapshot.docs[querySnapshot.docs.length-1]
+    let messages = []
+    querySnapshot.forEach(doc => {
+      const sent = !doc.metadata.hasPendingWrites
+      const data = doc.data({serverTimestamps: 'estimate'})
+      const message = {
+        ...data,
+        _id: doc.id,
+        createdAt: data.createdAt,
+        sent
+      }
+      if(data.user._id != this.userId && !data.received){
+        batch.update(doc.ref, {received: true})
+        message.received = true
+      }
+      messages.push(message)
     })
+    batch.commit().then(()=>{
+      this.updateRoom(roomId)
+    })
+    if(messages.length < nMax)
+      cursor = null
+    const resp = {
+      messages,
+      cursor
+    }
+    if(cb)
+      cb(resp)
+    else
+      return resp
   }
 
   createRoom(uid){
@@ -203,6 +196,8 @@ class Firechat {
             room.lastMessage = lastMessage
           transaction.update(ref, room)
       })
+    }).then(e => {
+      console.log("beleza")
     })
   }
 
@@ -245,7 +240,3 @@ class Firechat {
     })
   }
 }
-Navigation.events().registerAppLaunchedListener(() => {
-  Firechat.shared = new Firechat()
-})
-export default Firechat

@@ -6,25 +6,30 @@ import {
   StyleSheet,
 } from 'react-native'
 
-import Firechat from './Firechat'
+import Firechat from '../Firechat'
 
-export default class Screen extends React.Component {
+export default class extends React.Component {
   static get options() {
     return {
       topBar: {
         title: {
-          text: 'Screen'
+          text: 'Profile'
         },
       }
     };
   }
 
+  constructor(){
+    super()
+    this.firechat = new Firechat
+  }
+
   render() {
     return (
       <View style={styles.container}>
-        <Text>Screen</Text>
+        <Text>Profile</Text>
         <Button
-          onPress={() => Firechat.shared.signOut()}
+          onPress={() => this.firechat.signOut()}
           title="Sair"
         />
       </View>

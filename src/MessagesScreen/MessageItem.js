@@ -1,17 +1,16 @@
 import React, { Component } from 'react'
 import {
-    Icon,
-    ListItem,
-    Badge
-  } from "native-base"
-  import {
-    Image,
-    Text,
-    View,
-  } from 'react-native'
-  import Moment from 'moment'
-  import 'moment/locale/pt-br'
-  import { Navigation } from "react-native-navigation"
+  Icon,
+  ListItem,
+} from "native-base"
+import {
+  Image,
+  Text,
+  View,
+} from 'react-native'
+import Moment from 'moment'
+import 'moment/locale/pt-br'
+import { Navigation } from "react-native-navigation"
 
 export default class extends Component {
   render() {

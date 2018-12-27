@@ -3,6 +3,7 @@ import { Navigation } from 'react-native-navigation'
 export const goLogin = () => Navigation.setRoot({
   root: {
     stack: {
+        id: 'LoginRoot',
         children: [{
           component: {
             name: 'Login',
@@ -15,7 +16,7 @@ export const goLogin = () => Navigation.setRoot({
 export const goHome = () => Navigation.setRoot({
     root: {
       bottomTabs: {
-        id: 'BottomTabsId',
+        id: 'HomeRoot',
         children: [
           {
             stack: {
@@ -24,7 +25,7 @@ export const goHome = () => Navigation.setRoot({
                   name: 'Messages',
                   options: {
                     bottomTab: {
-                      icon: require('./signin.png')
+                      icon: require('../assets/signin.png')
                     }
                   }
                 },
@@ -33,10 +34,10 @@ export const goHome = () => Navigation.setRoot({
           },
           {
             component: {
-              name: 'Screen',
+              name: 'Profile',
               options: {
                 bottomTab: {
-                  icon: require('./signup.png')
+                  icon: require('../assets/signup.png')
                 }
               }
             },
