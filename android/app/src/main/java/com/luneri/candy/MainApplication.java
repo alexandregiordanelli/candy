@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.oblador.vectoricons.VectorIconsPackage;
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
@@ -65,7 +66,9 @@ public class MainApplication extends NavigationApplication {
         new RNFirebaseMessagingPackage(),
         new RNFirebaseNotificationsPackage(),
         new RNFirebasePerformancePackage(),
-        new RNFirebaseStoragePackage()
+        new RNFirebaseStoragePackage(),
+        new VectorIconsPackage()
+
       );
     }
 
@@ -95,7 +98,8 @@ public class MainApplication extends NavigationApplication {
       new RNFirebaseMessagingPackage(),
       new RNFirebaseNotificationsPackage(),
       new RNFirebasePerformancePackage(),
-      new RNFirebaseStoragePackage()
+      new RNFirebaseStoragePackage(),
+      new VectorIconsPackage()
     );
   }
 

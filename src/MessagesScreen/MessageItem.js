@@ -33,7 +33,7 @@ export default class extends Component {
       badge =  <View style={{borderRadius: 10, backgroundColor: '#007aff', minWidth: 20, alignItems: 'center'}}><Text style={{color: 'white'}}>{notifications}</Text></View>
     return (
         <ListItem noBorder style={{paddingRight: 0, paddingTop: 0, paddingBottom: 0 }} onPress={() => {
-          Navigation.push(this.props.componentId, { component: { name: 'Chat', passProps: {room: this.props.room}, options: {topBar: { title: { text: this.props.room.anotherUser.name }}}}});
+          Navigation.push(this.props.componentId, { component: { name: 'Chat', passProps: {room: this.props.room}, options: {topBar: { title: { text: this.props.room.anotherUser.name }}}}})
         }}>
           <View style={{flexDirection: 'row', paddingTop: 8}}>
             <Image style={{width: 56, height: 56, borderRadius: 28, marginLeft: 16, marginRight: 8, marginBottom: 8}} source={{ uri: this.props.room.anotherUser.avatar }} /> 

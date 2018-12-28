@@ -1,4 +1,5 @@
 import React from 'react'
+import { Navigation } from "react-native-navigation"
 import {GiftedChat, Send, Composer} from 'react-native-gifted-chat'
 import Firechat from '../Firechat'
 
@@ -12,6 +13,12 @@ export default class extends React.Component {
         visible: false, 
         drawBehind: true, 
         animate: true 
+      },
+      topBar: {
+        rightButtons: [{
+          id: 'avatar',
+          icon: require('../../assets/signin.png'),
+        }]
       }
     }
   }
@@ -22,6 +29,15 @@ export default class extends React.Component {
   }
   cursor = null
   firechat = new Firechat
+
+  constructor(props){
+    super(props)
+    Navigation.events().bindComponent(this)
+  }
+
+  navigationButtonPressed() {
+    Navigation.push(this.props.componentId, { component: { name: 'Profile' }})
+  }
 
   removeDuplicates = (myArr, prop) => {
     return myArr.filter((obj, pos, arr) => arr.map(mapObj => mapObj[prop]).indexOf(obj[prop]) === pos)

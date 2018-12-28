@@ -1,5 +1,5 @@
 import { Navigation } from 'react-native-navigation'
-import Icon from "react-native-vector-icons/MaterialIcons"
+import Icon from "react-native-vector-icons/SimpleLineIcons"
 
 export const goLogin = () => Navigation.setRoot({
   root: {
@@ -14,58 +14,63 @@ export const goLogin = () => Navigation.setRoot({
   }
 })
 
-export const goHome = () => {
-  Promise.all([
-    Icon.getImageSource('menu', 20, '#ffffff'),
-    Icon.getImageSource('add', 20, '#ffffff'),
-    Icon.getImageSource('add', 20, '#ffffff')
-  ]).then(icons => {
-    Navigation.setRoot({
-      root: {
-        bottomTabs: {
-          id: 'HomeRoot',
-          children: [
-            {
-              stack: {
-                children: [{
-                  component: {
-                    name: 'Home',
-                    options: {
-                      bottomTab: {
-                        icon: icons[0]
-                      }
-                    }
-                  },
-                }]
-              }
-            },
-            {
-              stack: {
-                children: [{
-                  component: {
-                    name: 'Messages',
-                    options: {
-                      bottomTab: {
-                        icon: icons[1]
-                      }
-                    }
-                  },
-                }]
-              }
-            },
-            {
+export const goHome = async () => Navigation.setRoot({
+  root: {
+    bottomTabs: {
+      id: 'HomeRoot',
+      children: [
+        {
+          stack: {
+            children: [{
+              component: {
+                name: 'Home',
+                options: {
+                  bottomTab: {
+                    icon: await Icon.getImageSource('home', 20, '#000'),
+                    text: "Candies",
+                    selectedIconColor: '#007aff',
+                    selectedTextColor: '#007aff'
+                  }
+                }
+              },
+            }]
+          }
+        },
+        {
+          stack: {
+            children: [{
+              component: {
+                name: 'Messages',
+                options: {
+                  bottomTab: {
+                    icon: await Icon.getImageSource('bubbles', 20, '#000'),
+                    text: "Mensagens",
+                    selectedIconColor: '#007aff',
+                    selectedTextColor: '#007aff'
+                  }
+                }
+              },
+            }]
+          }
+        },
+        {
+          stack: {
+            children: [{
               component: {
                 name: 'Profile',
                 options: {
                   bottomTab: {
-                    icon: icons[2]
+                    icon: await Icon.getImageSource('user', 20, '#000'),
+                    text: "Perfil",
+                    selectedIconColor: '#007aff',
+                    selectedTextColor: '#007aff'
                   }
                 }
               },
-            },
-          ],
+            }],
+          }
         }
-      }
-    })
-  })
-}
+      ],
+    }
+  }
+})

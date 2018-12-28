@@ -1,6 +1,7 @@
 apply plugin: "com.android.application"
 apply plugin: "com.google.firebase.firebase-perf"
 apply plugin: 'io.fabric'
+apply from: "../../node_modules/react-native-vector-icons/fonts.gradle"
 
 import com.android.build.OutputFile
 
@@ -160,8 +161,9 @@ android {
 }
 
 dependencies {
+  implementation project(':react-native-vector-icons')
   implementation project(':react-native-device-info')
-    compile project(':react-native-firebase')
+  implementation project(':react-native-firebase')
   //noinspection GradleDynamicVersion
   implementation fileTree(dir: "libs", include: ["*.jar"])
   implementation "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"

@@ -25,9 +25,6 @@ export default class extends React.Component {
 
   constructor(props) {
     super(props)
-    this.state = {
-      rooms: [],
-    }
     this.firechat = new Firechat
     this.ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
   }
