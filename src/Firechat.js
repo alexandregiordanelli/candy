@@ -16,6 +16,7 @@ export default class Firechat {
     this.db.settings({ timestampsInSnapshots: true })
     this.roomsRef = this.db.collection("rooms")
     this.usersRef = this.db.collection("users")
+    this.nMax = 20
 
     firebase.auth().onAuthStateChanged(user => {
       if(user){
@@ -108,17 +109,17 @@ export default class Firechat {
     }
   }
 
-  getMessages(roomId, nMax, cursor){
-    const ref = this.roomsRef.doc(roomId).collection("messages").orderBy("createdAt", "desc").startAfter(cursor).limit(nMax)
-    return ref.get().then(querySnapshot => this.parseSnapshot(querySnapshot, roomId, nMax))
+  getMessages(roomId, cursor){
+    const ref = this.roomsRef.doc(roomId).collection("messages").orderBy("createdAt", "desc").startAfter(cursor).limit(this.nMax)
+    return ref.get().then(querySnapshot => this.parseSnapshot(querySnapshot, roomId))
   }
 
-  getOnMessages(roomId, nMax, cb){
-    const ref = this.roomsRef.doc(roomId).collection("messages").orderBy("createdAt", "desc").limit(nMax)
-    return ref.onSnapshot(querySnapshot => this.parseSnapshot(querySnapshot, roomId, nMax, cb))
+  getOnMessages(roomId, cb){
+    const ref = this.roomsRef.doc(roomId).collection("messages").orderBy("createdAt", "desc").limit(this.nMax)
+    return ref.onSnapshot(querySnapshot => this.parseSnapshot(querySnapshot, roomId, cb))
   }
 
-  parseSnapshot(querySnapshot, roomId, nMax, cb){
+  parseSnapshot(querySnapshot, roomId, cb){
     const batch = this.db.batch()
     let cursor = querySnapshot.docs[querySnapshot.docs.length-1]
     let messages = []
@@ -140,7 +141,7 @@ export default class Firechat {
     batch.commit().then(()=>{
       this.updateRoom(roomId)
     })
-    if(messages.length < nMax)
+    if(messages.length < this.nMax)
       cursor = null
     const resp = {
       messages,

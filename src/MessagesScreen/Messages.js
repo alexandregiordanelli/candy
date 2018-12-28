@@ -17,7 +17,7 @@ export default class extends React.Component {
     return {
       topBar: {
         title: {
-          text: 'Messages'
+          text: 'Mensagens'
         },
       }
     }
@@ -33,11 +33,12 @@ export default class extends React.Component {
   }
 
   deleteRow(data, secId, rowId, rowMap) {
+    //TODO ALERT
     rowMap[`${secId}${rowId}`].props.closeRow()
     this.firechat.deleteRoom(data.id)
   }
 
-  componentDidMount(){ 
+  componentWillMount(){ 
     this.unsubscribe = this.firechat.getRooms(rooms => {
       this.props.dispatch({type: "ADD_ROOMS", rooms})
     })
