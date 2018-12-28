@@ -1,4 +1,5 @@
 import { Navigation } from 'react-native-navigation'
+import Icon from "react-native-vector-icons/MaterialIcons"
 
 export const goLogin = () => Navigation.setRoot({
   root: {
@@ -11,38 +12,60 @@ export const goLogin = () => Navigation.setRoot({
         }]
       }
   }
-});
+})
 
-export const goHome = () => Navigation.setRoot({
-    root: {
-      bottomTabs: {
-        id: 'HomeRoot',
-        children: [
-          {
-            stack: {
-              children: [{
-                component: {
-                  name: 'Messages',
-                  options: {
-                    bottomTab: {
-                      icon: require('../assets/signin.png')
+export const goHome = () => {
+  Promise.all([
+    Icon.getImageSource('menu', 20, '#ffffff'),
+    Icon.getImageSource('add', 20, '#ffffff'),
+    Icon.getImageSource('add', 20, '#ffffff')
+  ]).then(icons => {
+    Navigation.setRoot({
+      root: {
+        bottomTabs: {
+          id: 'HomeRoot',
+          children: [
+            {
+              stack: {
+                children: [{
+                  component: {
+                    name: 'Home',
+                    options: {
+                      bottomTab: {
+                        icon: icons[0]
+                      }
                     }
-                  }
-                },
-              }]
-            }
-          },
-          {
-            component: {
-              name: 'Profile',
-              options: {
-                bottomTab: {
-                  icon: require('../assets/signup.png')
-                }
+                  },
+                }]
               }
             },
-          },
-        ],
+            {
+              stack: {
+                children: [{
+                  component: {
+                    name: 'Messages',
+                    options: {
+                      bottomTab: {
+                        icon: icons[1]
+                      }
+                    }
+                  },
+                }]
+              }
+            },
+            {
+              component: {
+                name: 'Profile',
+                options: {
+                  bottomTab: {
+                    icon: icons[2]
+                  }
+                }
+              },
+            },
+          ],
+        }
       }
-    }
+    })
   })
+}

@@ -33,7 +33,6 @@ export default class extends React.Component {
   }
 
   deleteRow(data, secId, rowId, rowMap) {
-    //TODO ALERT
     rowMap[`${secId}${rowId}`].props.closeRow()
     this.firechat.deleteRoom(data.id)
   }

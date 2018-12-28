@@ -28,6 +28,4 @@ target 'Candy' do
 
   pod 'GoogleAppMeasurement', '~> 5.3.0'
 
-  pod 'RNDeviceInfo', :path => '../node_modules/react-native-device-info'
-
 end
