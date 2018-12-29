@@ -1,23 +1,14 @@
 import React from 'react'
+import { Navigation } from "react-native-navigation"
 import {
-  View,
   Text,
   FlatList,
-  Image
+  Image,
+  TouchableOpacity
 } from 'react-native'
 import Firechat from '../Firechat'
 
 export default class extends React.Component {
-  static get options() {
-    return {
-      topBar: {
-        title: {
-          text: 'Candy'
-        },
-      }
-    };
-  }
-
   state = {
       data: []
   }
@@ -47,13 +38,26 @@ export default class extends React.Component {
 
   render() {
     return (
-        <FlatList contentContainerStyle={{padding: 5}} data={this.state.data} numColumns={2} keyExtractor={item => item.email} renderItem={({ item }) => (
-            <View style={{flex: 1, height: 180, margin: 5, backgroundColor: "#000"}}>
-                <Image resizeMode='cover' style={{flex:1}} source={{uri: item.picture.large}}/>
-                <Text style={{color: "#fff", lineHeight: 30, textAlign: "center"}}>{item.name.first}</Text>
-            </View>
-            )} 
-        />
+      <FlatList contentContainerStyle={{paddingRight: 1}} data={this.state.data} numColumns={4} keyExtractor={item => item.email} renderItem={({ item }) => (
+          <TouchableOpacity style={{flex: 1, paddingLeft: 1, paddingBottom: 1}} onPress={()=>{
+            Navigation.push(this.props.componentId, { 
+              component: { 
+                name: 'Profile',
+                options: {
+                  bottomTabs: { 
+                    visible: false, 
+                    drawBehind: true, 
+                    animate: true 
+                  },
+                }
+              }
+            })
+          }}>
+                <Image resizeMode='cover' style={{flex:1,aspectRatio: 1}} source={{uri: item.picture.large}}/>
+                {/* <Text style={{color: "#fff", lineHeight: 30, textAlign: "center"}}>{item.name.first}</Text> */}
+          </TouchableOpacity>
+          )} 
+      />
     )
   }
 }

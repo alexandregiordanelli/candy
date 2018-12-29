@@ -9,16 +9,6 @@ import {
 import Firechat from '../Firechat'
 
 export default class extends React.Component {
-  static get options() {
-    return {
-      topBar: {
-        title: {
-          text: 'Profile'
-        },
-      }
-    };
-  }
-
   constructor(){
     super()
     this.firechat = new Firechat

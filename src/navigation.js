@@ -25,11 +25,27 @@ export const goHome = async () => Navigation.setRoot({
               component: {
                 name: 'Home',
                 options: {
+                  topBar: {
+                    drawBehind: true,
+                    background: {
+                      translucent: true,
+                    },
+                    title: {
+                      text: 'Candy'
+                    },
+                  },
                   bottomTab: {
                     icon: await Icon.getImageSource('home', 20, '#000'),
                     text: "Candies",
                     selectedIconColor: '#007aff',
                     selectedTextColor: '#007aff'
+                  },
+                  bottomTabs: {
+                    translucent: true,
+                    drawBehind: true,
+                    background: {
+                      translucent: true,
+                    }
                   }
                 }
               },
@@ -42,11 +58,27 @@ export const goHome = async () => Navigation.setRoot({
               component: {
                 name: 'Messages',
                 options: {
+                  topBar: {
+                    drawBehind: true,
+                    background: {
+                      translucent: true,
+                    },
+                    title: {
+                      text: 'Mensagens'
+                    },
+                  },
                   bottomTab: {
                     icon: await Icon.getImageSource('bubbles', 20, '#000'),
                     text: "Mensagens",
                     selectedIconColor: '#007aff',
                     selectedTextColor: '#007aff'
+                  },
+                  bottomTabs: {
+                    translucent: true,
+                    drawBehind: true,
+                    background: {
+                      translucent: true,
+                    }
                   }
                 }
               },
@@ -59,11 +91,27 @@ export const goHome = async () => Navigation.setRoot({
               component: {
                 name: 'Profile',
                 options: {
+                  topBar: {
+                    drawBehind: true,
+                    background: {
+                      translucent: true,
+                    },
+                    title: {
+                      text: 'Perfil'
+                    },
+                  },
                   bottomTab: {
                     icon: await Icon.getImageSource('user', 20, '#000'),
                     text: "Perfil",
                     selectedIconColor: '#007aff',
                     selectedTextColor: '#007aff'
+                  },
+                  bottomTabs: {
+                    translucent: true,
+                    drawBehind: true,
+                    background: {
+                      translucent: true,
+                    }
                   }
                 }
               },

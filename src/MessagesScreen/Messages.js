@@ -13,15 +13,6 @@ import Firechat from '../Firechat'
 
 @connect(state => ({rooms: state.rooms}))
 export default class extends React.Component {
-  static get options() {
-    return {
-      topBar: {
-        title: {
-          text: 'Mensagens'
-        },
-      }
-    }
-  }
 
   constructor(props) {
     super(props)

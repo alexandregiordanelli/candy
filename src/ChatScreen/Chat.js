@@ -36,7 +36,18 @@ export default class extends React.Component {
   }
 
   navigationButtonPressed() {
-    Navigation.push(this.props.componentId, { component: { name: 'Profile' }})
+    Navigation.push(this.props.componentId, { 
+      component: { 
+        name: 'Profile',
+        options: {
+          bottomTabs: { 
+            visible: false, 
+            drawBehind: true, 
+            animate: true 
+          },
+        }
+      }
+    })
   }
 
   removeDuplicates = (myArr, prop) => {
@@ -87,7 +98,7 @@ export default class extends React.Component {
   }
 
   renderComposer = props => {
-    return <Composer {...props} placeholder={'converse ;)'} />
+    return <Composer {...props} placeholder={'Escrever mensagem..'} />
   }
 
   render() {
