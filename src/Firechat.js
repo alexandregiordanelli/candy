@@ -13,6 +13,7 @@ export default class Firechat {
     if(Firechat.instance)
       return Firechat.instance
     this.db = firebase.firestore()
+    this.db2 = firebase.database()
     this.db.settings({ timestampsInSnapshots: true })
     this.roomsRef = this.db.collection("rooms")
     this.usersRef = this.db.collection("users")
@@ -31,19 +32,10 @@ export default class Firechat {
         else { //device
           this.userId = "ua2ezI5QJceHg5XhX17kiJvEY132"
         }
-
-        if(store.getState().root != "HomeRoot"){
-          goHome().then(navigation => {
-            store.dispatch({type: "SET_ROOT", root: navigation.root.id})
-          })
-        }
+        goHome()
       } else {
         this.userId = null
-        if(store.getState().root != "LoginRoot"){
-          goLogin().then(navigation => {
-            store.dispatch({type: "SET_ROOT", root: navigation.root.id})
-          })
-        }
+        goLogin()
       }
     })
 

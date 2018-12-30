@@ -33,7 +33,6 @@ export default class extends React.Component {
 
   componentDidMount(){
     this.firechat.getUser().then(user => {
-      console.log(user)
       this.setState({user})
     })
   }

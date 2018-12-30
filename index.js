@@ -14,13 +14,25 @@ const rooms = (state = [], action) => {
   return state
 }
 
-const root = (state = "", action) => { //importante string vazia, deixar o firebase auth decidir
-  if(action.type == 'SET_ROOT')
-    return action.root
+const removeDuplicates = (array, prop) => array.filter((obj, pos, arr) => arr.map(mapObj => mapObj[prop]).indexOf(obj[prop]) === pos)
+
+const sortByDistance = array => array.sort((a, b) => ((a.distance < b.distance) ? -1 : ((a.distance > b.distance) ? 1 : 0)))
+
+const geofire = (state = [], action) => {
+  if(action.type == 'KEY_ENTERED')
+    return sortByDistance(removeDuplicates(state.concat(action.payload), "key"))
+  else if(action.type == 'KEY_EXITED')
+    return state.filter(obj => obj.key !== action.payload.key)
+  else if(action.type == 'KEY_MOVED'){
+    const index = state.findIndex(obj => obj.key == action.payload.key)
+    state = state.concat()
+    state[index] = action.payload
+    return state
+  }
   return state
 }
 
-const store = createStore(combineReducers({rooms, root}))
+const store = createStore(combineReducers({rooms, geofire}))
 
 Navigation.registerComponentWithRedux('Login', () => Login, Provider, store)
 Navigation.registerComponentWithRedux('Home', () => Home, Provider, store)
