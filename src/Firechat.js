@@ -81,13 +81,11 @@ export default class Firechat {
   }
 
   getUser(){
-    return new Promise(resolve => {
-      this.usersRef.doc(this.userId).get().then(doc => {
-        if(doc.exists)
-          resolve({...doc.data(), _id: doc.id})
-        else
-          resolve(false)
-      })
+    return this.usersRef.doc(this.userId).get().then(doc => {
+      if(doc.exists)
+        return {...doc.data(), _id: doc.id}
+      else
+        return false
     })
   }
 

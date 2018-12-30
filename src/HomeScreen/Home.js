@@ -19,7 +19,7 @@ export default class extends React.Component {
 
   makeRemoteRequest = () => {
     const { page, seed } = this.state;
-    const url = `https://randomuser.me/api/?seed=${seed}&page=${page}&results=20`;
+    const url = `https://randomuser.me/api/?seed=${seed}&page=${page}&results=60`;
     this.setState({ loading: true });
     fetch(url)
       .then(res => res.json())
@@ -37,7 +37,7 @@ export default class extends React.Component {
   };
 
   render() {
-    return (
+    return ( 
       <FlatList contentContainerStyle={{paddingRight: 1}} data={this.state.data} numColumns={4} keyExtractor={item => item.email} renderItem={({ item }) => (
           <TouchableOpacity style={{flex: 1, paddingLeft: 1, paddingBottom: 1}} onPress={()=>{
             Navigation.push(this.props.componentId, { 
@@ -53,7 +53,7 @@ export default class extends React.Component {
               }
             })
           }}>
-                <Image resizeMode='cover' style={{flex:1,aspectRatio: 1}} source={{uri: item.picture.large}}/>
+                <Image resizeMode='cover' style={{flex:1, aspectRatio: 1}} source={{uri: item.picture.large}}/>
                 {/* <Text style={{color: "#fff", lineHeight: 30, textAlign: "center"}}>{item.name.first}</Text> */}
           </TouchableOpacity>
           )} 

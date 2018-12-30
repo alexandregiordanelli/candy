@@ -18,10 +18,11 @@ export default class extends React.Component {
         rightButtons: [{
           id: 'avatar',
           icon: require('../../assets/signin.png'),
-        }]
+        }],
       }
     }
   }
+
   state = {
     messages: [],
     loadEarlier: false,

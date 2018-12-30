@@ -26,10 +26,6 @@ export const goHome = async () => Navigation.setRoot({
                 name: 'Home',
                 options: {
                   topBar: {
-                    drawBehind: true,
-                    background: {
-                      translucent: true,
-                    },
                     title: {
                       text: 'Candy'
                     },
@@ -40,13 +36,6 @@ export const goHome = async () => Navigation.setRoot({
                     selectedIconColor: '#007aff',
                     selectedTextColor: '#007aff'
                   },
-                  bottomTabs: {
-                    translucent: true,
-                    drawBehind: true,
-                    background: {
-                      translucent: true,
-                    }
-                  }
                 }
               },
             }]
@@ -59,10 +48,6 @@ export const goHome = async () => Navigation.setRoot({
                 name: 'Messages',
                 options: {
                   topBar: {
-                    drawBehind: true,
-                    background: {
-                      translucent: true,
-                    },
                     title: {
                       text: 'Mensagens'
                     },
@@ -73,13 +58,6 @@ export const goHome = async () => Navigation.setRoot({
                     selectedIconColor: '#007aff',
                     selectedTextColor: '#007aff'
                   },
-                  bottomTabs: {
-                    translucent: true,
-                    drawBehind: true,
-                    background: {
-                      translucent: true,
-                    }
-                  }
                 }
               },
             }]
@@ -91,28 +69,12 @@ export const goHome = async () => Navigation.setRoot({
               component: {
                 name: 'Profile',
                 options: {
-                  topBar: {
-                    drawBehind: true,
-                    background: {
-                      translucent: true,
-                    },
-                    title: {
-                      text: 'Perfil'
-                    },
-                  },
                   bottomTab: {
                     icon: await Icon.getImageSource('user', 20, '#000'),
                     text: "Perfil",
                     selectedIconColor: '#007aff',
                     selectedTextColor: '#007aff'
                   },
-                  bottomTabs: {
-                    translucent: true,
-                    drawBehind: true,
-                    background: {
-                      translucent: true,
-                    }
-                  }
                 }
               },
             }],
