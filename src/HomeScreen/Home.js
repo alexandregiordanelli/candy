@@ -23,7 +23,7 @@ export default class extends React.Component {
   }
 
   async componentDidMount() {
-    this.firechat.getUsersNearby(1000).then(users => {
+    this.firechat.getUsersNearby(400).then(users => {
       this.setState({users})
     })
     //this.createFakeUsers()
@@ -220,7 +220,7 @@ export default class extends React.Component {
   render() {
     return ( 
       <FlatList contentContainerStyle={{paddingRight: 1}} data={this.state.users} numColumns={4} keyExtractor={item => item.id} renderItem={({ item }) => (
-          <TouchableOpacity style={{flex: 1, paddingLeft: 1, paddingBottom: 1}} onPress={()=>{
+          <TouchableOpacity style={{flex: 1, marginLeft: 1, marginBottom: 1}} onPress={()=>{
             Navigation.push(this.props.componentId, { 
               component: { 
                 name: 'Profile',
@@ -235,7 +235,7 @@ export default class extends React.Component {
             })
           }}>
                 <Image resizeMode='cover' style={{flex:1, aspectRatio: 1}} source={{uri: item.avatar}}/>
-                <Text style={{color: "#000", lineHeight: 30, textAlign: "center"}}>{item.distance}</Text>
+                <Text style={{color: "#fff", backgroundColor: 'rgba(0,0,0,0.4)', fontSize: 11, position: 'absolute', right: 0, bottom:0}}>{item.distance} m</Text>
           </TouchableOpacity>
           )} 
       />
