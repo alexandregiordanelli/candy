@@ -2,6 +2,7 @@ import firebase from 'react-native-firebase'
 import { goLogin, goHome } from './navigation'
 import DeviceInfo from 'react-native-device-info'
 import { Platform } from 'react-native'
+import { getDocumentsNearby, encodeGeohash } from './Geofire'
 
 const isEmulator = DeviceInfo.isEmulator()
 
@@ -19,19 +20,21 @@ export default class Firechat {
     this.usersRef = this.db.collection("users")
     this.nMax = 20
 
-    firebase.auth().onAuthStateChanged(user => {
+    firebase.auth().onAuthStateChanged(async user => {
       if(user){
         this.userId = user.uid
         if(isEmulator){
-          if(Platform.OS == "ios"){
+          if(Platform.OS == "ios")
             this.userId = "NLXyeIMnS3QriEQ9vWH772Ltdn12"
-          } else {  //android
+          else  //android
             this.userId = "NLXyeIMnS3QriEQ9vWH772Ltdn12"
-          }
         } 
-        else { //device
+        else //device
           this.userId = "ua2ezI5QJceHg5XhX17kiJvEY132"
-        }
+        await this.getUser()
+        if(!this.user) 
+          await this.createUser()
+        await this.updatetUserLocation(-22.9690888, -43.2041239)
         goHome()
       } else {
         this.userId = null
@@ -46,39 +49,37 @@ export default class Firechat {
     firebase.auth().signOut()
   }
 
-  createUser(){
-    return new Promise(resolve => {
-      this.getUser().then(user => {
-        if(!user){
-          fetch("https://randomuser.me/api/").then(e => e.json()).then(e => {
-            const data = e.results[0]
-            user = {
-              name: data.name.first,
-              avatar: data.picture.medium
-            }
-            this.usersRef.doc(this.userId).set(user).then(()=>{
-              user._id = this.userId
-              resolve(user)
-            })
-          })
-        } else {
-          resolve(user)
-        }
-      })
+
+  async createFakeUser(name, avatar, latitude, longitude){
+    const location = new firebase.firestore.GeoPoint(latitude, longitude)
+    await this.usersRef.add({
+      name,
+      fake: true,
+      avatar,
+      geohash: encodeGeohash([location.latitude, location.longitude]),
+      location
     })
   }
 
-  updateUser(data){
-    this.usersRef.doc(this.userId).update(data)
+  async createUser(){
+    await this.usersRef.doc(this.userId).set({
+      name: "Alexandre",
+      avatar: "https://avatars2.githubusercontent.com/u/1518223?s=460&v=4"
+    }, {merge: true})
+    await this.getUser()
   }
 
-  getUser(){
-    return this.usersRef.doc(this.userId).get().then(doc => {
-      if(doc.exists)
-        return {...doc.data(), _id: doc.id}
-      else
-        return false
-    })
+  async updateUser(data){
+    await this.usersRef.doc(this.userId).set(data, {merge: true})
+    await this.getUser()
+  }
+
+  async getUser(){
+    const doc = await this.usersRef.doc(this.userId).get()
+    if(doc.exists)
+      this.user = doc.data()
+    else
+      this.user = null
   }
 
   createMessages(roomId, messages){
@@ -230,4 +231,17 @@ export default class Firechat {
       })
     })
   }
+
+  async getUsersNearby(radius){
+    return await getDocumentsNearby(this.usersRef, [this.user.location.latitude, this.user.location.longitude], radius)
+  }
+
+  async updatetUserLocation(latitude, longitude){
+    const location = new firebase.firestore.GeoPoint(latitude, longitude)
+    await this.updateUser({
+      geohash: encodeGeohash([location.latitude, location.longitude]),
+      location
+    })
+  }
+
 }
