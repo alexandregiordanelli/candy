@@ -16,6 +16,7 @@ export default class extends React.Component {
         noBorder: true,
         drawBehind: true,
         elevation: 0,
+        transparent: true,
         background: {
           color: 'transparent',
         },      

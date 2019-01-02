@@ -18,6 +18,11 @@ export const goHome = async () => Navigation.setRoot({
   root: {
     bottomTabs: {
       id: 'HomeRoot',
+      options: {
+        bottomTabs: {
+          hideShadow: true,
+        }
+      },
       children: [
         {
           stack: {
@@ -29,6 +34,11 @@ export const goHome = async () => Navigation.setRoot({
                     title: {
                       text: 'Candy'
                     },
+                    noBorder: true,
+                    transparent: true,
+                    background: {
+                      color: 'transparent',
+                    },      
                   },
                   bottomTab: {
                     icon: await Icon.getImageSource('home', 20, '#000'),

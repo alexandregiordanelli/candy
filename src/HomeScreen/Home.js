@@ -227,8 +227,6 @@ export default class extends React.Component {
                 options: {
                   bottomTabs: { 
                     visible: false, 
-                    drawBehind: true, 
-                    animate: true 
                   },
                 }
               }
