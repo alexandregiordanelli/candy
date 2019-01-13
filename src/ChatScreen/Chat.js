@@ -99,11 +99,11 @@ export default class extends React.Component {
   }
 
   renderComposer = props => {
-    return <Composer {...props} textInputProps={{color: 'white'}} placeholderTextColor='#444' placeholder={'Escrever mensagem..'} />
+    return <Composer {...props} textInputStyle={{color: '#fff'}} textInputProps={{keyboardAppearance: 'dark'}} placeholderTextColor='#444' placeholder={'Escrever mensagem..'} />
   }
 
   renderInputToolbar = props => {
-    return <InputToolbar {...props} containerStyle={{backgroundColor:'#333'}}  />
+    return <InputToolbar {...props} containerStyle={{backgroundColor:'#333', borderTopColor: '#444'}}  />
   }
 
   renderBubble = props => {

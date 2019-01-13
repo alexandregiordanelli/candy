@@ -30,7 +30,7 @@ export default class extends Component {
     let badge = null
     const notifications = this.props.room.notifications[this.props.userId]
     if(notifications)
-      badge =  <View style={{borderRadius: 10, backgroundColor: '#007aff', minWidth: 20, alignItems: 'center'}}><Text style={{color: 'white'}}>{notifications}</Text></View>
+      badge =  <View style={{borderRadius: 10, backgroundColor: '#fc6157', minWidth: 20, alignItems: 'center'}}><Text style={{color: 'white'}}>{notifications}</Text></View>
     return (
         <ListItem noBorder style={{backgroundColor: '#333', paddingRight: 0, paddingTop: 0, paddingBottom: 0 }} onPress={() => {
           Navigation.push(this.props.componentId, { 
@@ -55,7 +55,7 @@ export default class extends Component {
               <View style={{flex: 1}}>
                 <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
                   <Text style={{fontWeight: '600', color: '#fff'}}>{this.props.room.anotherUser.name}</Text>
-                  <Text style={{color: notifications? '#007aff': '#fff'}}>{this.renderTime(this.props.room.updatedAt)}</Text>
+                  <Text style={{color: notifications? '#fc6157': '#fff'}}>{this.renderTime(this.props.room.updatedAt)}</Text>
                 </View>
                 <View style={{flex: 1, flexDirection: 'row', justifyContent:'space-between', alignItems: 'center'}}>
                   <Text numberOfLines={2} style={{flex: 1, color: 'white'}}>{this.props.room.lastMessage}</Text>{badge}

@@ -46,9 +46,18 @@ Navigation.events().registerAppLaunchedListener(() => {
     layout: {
       backgroundColor: '#333'
     },
+    statusBar: {
+      style: 'light'
+    },
     topBar: {
+      backButton: { 
+        color: 'white' 
+      },
       // barStyle: 'black',
       // drawBehind: true,
+      title: {
+        color: 'white',
+      },
       background: {
         color: "#333",
         // translucent: true,
@@ -59,8 +68,14 @@ Navigation.events().registerAppLaunchedListener(() => {
       translucent: true,
       // barStyle: 'black',
       drawBehind: true,
-      backgroundColor: '#333',
-    }
+      backgroundColor: '#222',
+    },
+    bottomTab: {
+      textColor: '#666',
+      iconColor: '#666',
+      selectedIconColor: '#fff',
+      selectedTextColor: '#fff'
+    },
   })
 })
 

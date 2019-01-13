@@ -39,15 +39,11 @@ export const goHome = async () => Navigation.setRoot({
                   topBar: {
                     title: {
                       text: 'Candy',
-                      color: 'white'
-                    },   
+                    }, 
                   },
                   bottomTab: {
-                    icon: await Icon.getImageSource('home', 20, '#666'),
+                    icon: await Icon.getImageSource('home', 20),
                     text: "Candies",
-                    textColor: '#666',
-                    selectedIconColor: '#fff',
-                    selectedTextColor: '#fff'
                   },
                 }
               },
@@ -63,15 +59,11 @@ export const goHome = async () => Navigation.setRoot({
                   topBar: {
                     title: {
                       text: 'Mensagens',
-                      color: 'white'
                     },
                   },
                   bottomTab: {
-                    icon: await Icon.getImageSource('bubbles', 20, '#666'),
+                    icon: await Icon.getImageSource('bubbles', 20),
                     text: "Mensagens",
-                    textColor: '#666',
-                    selectedIconColor: '#fff',
-                    selectedTextColor: '#fff'
                   },
                 }
               },
@@ -85,11 +77,8 @@ export const goHome = async () => Navigation.setRoot({
                 name: 'Profile',
                 options: {
                   bottomTab: {
-                    icon: await Icon.getImageSource('user', 20, '#666'),
+                    icon: await Icon.getImageSource('user', 20),
                     text: "Perfil",
-                    textColor: '#666',
-                    selectedIconColor: '#fff',
-                    selectedTextColor: '#fff'
                   },
                 }
               },

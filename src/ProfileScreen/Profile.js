@@ -15,10 +15,10 @@ export default class extends React.Component {
       topBar: {
         drawBehind: true,
         elevation: 0,
+        // noBorder: true,
         background: {
           color: 'transparent',
         },  
-        backButton: { color: 'black' },
       }
     }
   }
