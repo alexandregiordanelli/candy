@@ -13,13 +13,12 @@ export default class extends React.Component {
   static get options() {
     return {
       topBar: {
-        noBorder: true,
         drawBehind: true,
         elevation: 0,
-        transparent: true,
         background: {
           color: 'transparent',
-        },      
+        },  
+        backButton: { color: 'black' },
       }
     }
   }
@@ -37,9 +36,10 @@ export default class extends React.Component {
   }
 
   render() {
+    const user = this.props.user? this.props.user: this.state.user
     return (
       <View style={{flex: 1}}>
-        <Image resizeMode='cover' style={{aspectRatio: 1}} source={{uri: this.state.user.avatar}}/>
+        <Image resizeMode='cover' style={{aspectRatio: 1}} source={{uri: user.avatar}}/>
         <Button
           onPress={() => this.firechat.signOut()}
           title="Sair"

@@ -13,8 +13,16 @@ import { connect } from 'react-redux'
 
 @connect(state => ({geofire: state.geofire}))
 export default class extends React.Component {
+  static get options() { 
+    return {         
+      statusBar: {
+        style: 'light'
+      },
+    }
+  }
+
   state = {
-      users: []
+      users: [],
   }
 
   constructor(props){
@@ -23,9 +31,8 @@ export default class extends React.Component {
   }
 
   async componentDidMount() {
-    this.firechat.getUsersNearby(400).then(users => {
-      this.setState({users})
-    })
+    const users = await this.firechat.getUsersNearby(400)
+    this.setState({users})
     //this.createFakeUsers()
   }
 
@@ -221,12 +228,23 @@ export default class extends React.Component {
     return ( 
       <FlatList contentContainerStyle={{paddingRight: 1}} data={this.state.users} numColumns={4} keyExtractor={item => item.id} renderItem={({ item }) => (
           <TouchableOpacity style={{flex: 1, marginLeft: 1, marginBottom: 1}} onPress={()=>{
+            // Navigation.showModal({
+            //   component: {
+            //     name: 'Profile',
+            //     passProps: {
+            //       user: item
+            //     },
+            //   }
+            // })
             Navigation.push(this.props.componentId, { 
               component: { 
                 name: 'Profile',
+                passProps: {
+                  user: item
+                },
                 options: {
                   bottomTabs: { 
-                    visible: false, 
+                    visible: false,
                   },
                 }
               }

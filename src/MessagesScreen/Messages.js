@@ -13,7 +13,14 @@ import Firechat from '../Firechat'
 
 @connect(state => ({rooms: state.rooms}))
 export default class extends React.Component {
-
+  static get options() { 
+    return {         
+      statusBar: {
+        style: 'light'
+      }
+    }
+  }
+  
   constructor(props) {
     super(props)
     this.firechat = new Firechat
@@ -37,19 +44,15 @@ export default class extends React.Component {
 
   render() {
     return (
-      <Container>
-        <Content>
-          <List
-            rightOpenValue={-75}
-            dataSource={this.ds.cloneWithRows(this.props.rooms)}
-            renderRow={data => <MessageItem componentId={this.props.componentId} room={data} userId={this.firechat.userId} />}
-            renderRightHiddenRow={(data, secId, rowId, rowMap) =>
-              <Button full danger onPress={() => this.deleteRow(data, secId, rowId, rowMap)}>
-                <Icon active name="trash" />
-              </Button>}
-            />
-        </Content>
-      </Container>
+      <List
+        rightOpenValue={-75}
+        dataSource={this.ds.cloneWithRows(this.props.rooms)}
+        renderRow={data => <MessageItem componentId={this.props.componentId} room={data} userId={this.firechat.userId} />}
+        renderRightHiddenRow={(data, secId, rowId, rowMap) =>
+          <Button full danger onPress={() => this.deleteRow(data, secId, rowId, rowMap)}>
+            <Icon active name="trash" />
+          </Button>}
+        />
     );
   }
 }

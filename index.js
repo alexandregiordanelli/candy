@@ -42,5 +42,25 @@ Navigation.registerComponentWithRedux('Profile', () => Profile, Provider, store)
 
 Navigation.events().registerAppLaunchedListener(() => {
   new Firechat(store)
+  Navigation.setDefaultOptions({
+    layout: {
+      backgroundColor: '#333'
+    },
+    topBar: {
+      // barStyle: 'black',
+      // drawBehind: true,
+      background: {
+        color: "#333",
+        // translucent: true,
+      },
+      backButton: { color: 'white' },
+    },
+    bottomTabs: {
+      translucent: true,
+      // barStyle: 'black',
+      drawBehind: true,
+      backgroundColor: '#333',
+    }
+  })
 })
 

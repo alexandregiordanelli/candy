@@ -19,9 +19,15 @@ export const goHome = async () => Navigation.setRoot({
     bottomTabs: {
       id: 'HomeRoot',
       options: {
-        bottomTabs: {
-          hideShadow: true,
-        }
+        layout: {
+          backgroundColor: '#333'
+        },
+        // bottomTabs: {
+        //   backgroundColor: '#333',
+        //   drawBehind: true,
+        //   // hideShadow: true,
+        //   // elevation: 0
+        // },
       },
       children: [
         {
@@ -32,19 +38,16 @@ export const goHome = async () => Navigation.setRoot({
                 options: {
                   topBar: {
                     title: {
-                      text: 'Candy'
-                    },
-                    noBorder: true,
-                    transparent: true,
-                    background: {
-                      color: 'transparent',
-                    },      
+                      text: 'Candy',
+                      color: 'white'
+                    },   
                   },
                   bottomTab: {
-                    icon: await Icon.getImageSource('home', 20, '#000'),
+                    icon: await Icon.getImageSource('home', 20, '#666'),
                     text: "Candies",
-                    selectedIconColor: '#007aff',
-                    selectedTextColor: '#007aff'
+                    textColor: '#666',
+                    selectedIconColor: '#fff',
+                    selectedTextColor: '#fff'
                   },
                 }
               },
@@ -59,14 +62,16 @@ export const goHome = async () => Navigation.setRoot({
                 options: {
                   topBar: {
                     title: {
-                      text: 'Mensagens'
+                      text: 'Mensagens',
+                      color: 'white'
                     },
                   },
                   bottomTab: {
-                    icon: await Icon.getImageSource('bubbles', 20, '#000'),
+                    icon: await Icon.getImageSource('bubbles', 20, '#666'),
                     text: "Mensagens",
-                    selectedIconColor: '#007aff',
-                    selectedTextColor: '#007aff'
+                    textColor: '#666',
+                    selectedIconColor: '#fff',
+                    selectedTextColor: '#fff'
                   },
                 }
               },
@@ -80,10 +85,11 @@ export const goHome = async () => Navigation.setRoot({
                 name: 'Profile',
                 options: {
                   bottomTab: {
-                    icon: await Icon.getImageSource('user', 20, '#000'),
+                    icon: await Icon.getImageSource('user', 20, '#666'),
                     text: "Perfil",
-                    selectedIconColor: '#007aff',
-                    selectedTextColor: '#007aff'
+                    textColor: '#666',
+                    selectedIconColor: '#fff',
+                    selectedTextColor: '#fff'
                   },
                 }
               },

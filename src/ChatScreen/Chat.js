@@ -1,6 +1,6 @@
 import React from 'react'
 import { Navigation } from "react-native-navigation"
-import {GiftedChat, Send, Composer} from 'react-native-gifted-chat'
+import {GiftedChat, Send, Composer, Bubble, InputToolbar} from 'react-native-gifted-chat'
 import Firechat from '../Firechat'
 
 import "moment"
@@ -95,11 +95,39 @@ export default class extends React.Component {
   }
 
   renderSend = props => {
-    return <Send {...props} label={"Enviar"}/>
+    return <Send {...props} textStyle={{color: '#fc6157'}} label={"Enviar"}/>
   }
 
   renderComposer = props => {
-    return <Composer {...props} placeholder={'Escrever mensagem..'} />
+    return <Composer {...props} textInputProps={{color: 'white'}} placeholderTextColor='#444' placeholder={'Escrever mensagem..'} />
+  }
+
+  renderInputToolbar = props => {
+    return <InputToolbar {...props} containerStyle={{backgroundColor:'#333'}}  />
+  }
+
+  renderBubble = props => {
+    return (
+      <Bubble
+        {...props}
+        textStyle={{
+          left: {
+            color: 'white',
+          },
+          right: {
+            color: 'white',
+          },
+        }}
+        wrapperStyle={{
+          left: {
+            backgroundColor: '#222',
+          },
+          right: {
+            backgroundColor: '#fc6157'
+          }
+        }}
+      />
+    )
   }
 
   render() {
@@ -117,6 +145,8 @@ export default class extends React.Component {
           renderSend={this.renderSend}
           renderComposer={this.renderComposer}
           renderAvatar={null}
+          renderBubble={this.renderBubble}
+          renderInputToolbar={this.renderInputToolbar}
         />
     )
   }
