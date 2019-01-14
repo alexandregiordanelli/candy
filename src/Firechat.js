@@ -189,7 +189,7 @@ export default class Firechat {
           transaction.update(ref, room)
       })
     }).then(e => {
-      console.log("beleza")
+      //console.log("beleza")
     })
   }
 

@@ -1,4 +1,5 @@
 import React from 'react'
+import { Navigation } from "react-native-navigation"
 import {
   View,
   Text,
@@ -9,27 +10,21 @@ import {
 
 import Firechat from '../Firechat'
 
-export default class extends React.Component {
-  static get options() {
+export default class Profile extends React.Component {
+  static get options(){
     return {
       topBar: {
-        drawBehind: true,
-        elevation: 0,
-        // noBorder: true,
-        background: {
-          color: 'transparent',
-        },  
+        visible: false,
+        drawBehind: true
       }
     }
   }
 
-  constructor(props){
-    super(props)
-    this.firechat = new Firechat
-    this.state = {
-      user: {}
-    }
+  state = {
+    user: {}
   }
+
+  firechat = new Firechat
 
   componentDidMount(){
     this.setState({user: this.firechat.user})
@@ -39,7 +34,13 @@ export default class extends React.Component {
     const user = this.props.user? this.props.user: this.state.user
     return (
       <View style={{flex: 1}}>
-        <Image resizeMode='cover' style={{aspectRatio: 1}} source={{uri: user.avatar}}/>
+        <Navigation.Element elementId={'cover'}>
+          <Image resizeMode='cover' style={{aspectRatio: 1}} source={{uri: user.avatar}}/>
+        </Navigation.Element>
+        <Button
+          onPress={() => Navigation.pop(this.props.componentId)}
+          title="Sair"
+        />
         <Button
           onPress={() => this.firechat.signOut()}
           title="Sair"

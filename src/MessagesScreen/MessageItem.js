@@ -1,16 +1,14 @@
 import React, { Component } from 'react'
 import {
-  Icon,
-  ListItem,
-} from "native-base"
-import {
   Image,
   Text,
   View,
+  TouchableOpacity,
 } from 'react-native'
 import moment from 'moment'
 import 'moment/locale/pt-br'
 import { Navigation } from "react-native-navigation"
+import Icon from "react-native-vector-icons/SimpleLineIcons"
 
 export default class extends Component {
 
@@ -32,7 +30,7 @@ export default class extends Component {
     if(notifications)
       badge =  <View style={{borderRadius: 10, backgroundColor: '#fc6157', minWidth: 20, alignItems: 'center'}}><Text style={{color: 'white'}}>{notifications}</Text></View>
     return (
-        <ListItem noBorder style={{backgroundColor: '#333', paddingRight: 0, paddingTop: 0, paddingBottom: 0 }} onPress={() => {
+        <TouchableOpacity style={{backgroundColor: '#333', paddingRight: 0, paddingTop: 0, paddingBottom: 0 }} onPress={() => {
           Navigation.push(this.props.componentId, { 
             component: { 
               name: 'Chat',
@@ -61,10 +59,10 @@ export default class extends Component {
                   <Text numberOfLines={2} style={{flex: 1, color: 'white'}}>{this.props.room.lastMessage}</Text>{badge}
                 </View>
               </View>
-              <Icon style={{alignSelf: 'center',marginLeft: 8, marginRight: 16, fontSize: 15, color: '#444'}} ios='ios-arrow-forward' android="md-arrow-forward"/>
+              <Icon style={{alignSelf: 'center',marginLeft: 8, marginRight: 16, fontSize: 15, color: '#444'}} name="arrow-right" size={30} color="#444" />
             </View>
           </View>
-        </ListItem>
+        </TouchableOpacity>
     )
   }
 }

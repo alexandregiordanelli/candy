@@ -18,17 +18,6 @@ export const goHome = async () => Navigation.setRoot({
   root: {
     bottomTabs: {
       id: 'HomeRoot',
-      options: {
-        layout: {
-          backgroundColor: '#333'
-        },
-        // bottomTabs: {
-        //   backgroundColor: '#333',
-        //   drawBehind: true,
-        //   // hideShadow: true,
-        //   // elevation: 0
-        // },
-      },
       children: [
         {
           stack: {

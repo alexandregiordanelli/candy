@@ -1,9 +1,24 @@
 import React from 'react'
 import { Navigation } from "react-native-navigation"
-import {GiftedChat, Send, Composer, Bubble, InputToolbar} from 'react-native-gifted-chat'
 import Firechat from '../Firechat'
+import {
+  Text,
+  FlatList,
+  Image,
+  View,
+  TouchableOpacity,
+  ScrollView,
+  TextInput,
+  InputAccessoryView,
+  Button,
+  Dimensions,
+  StyleSheet,
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform
+} from 'react-native'
 
-import "moment"
+import moment from 'moment'
 import "moment/locale/pt-br"
 
 export default class extends React.Component {
@@ -11,10 +26,13 @@ export default class extends React.Component {
     return {
       bottomTabs: { 
         visible: false, 
-        drawBehind: true, 
-        animate: true 
+        drawBehind: true
       },
       topBar: {
+        // drawBehind: false,
+        // background: {
+        //   color: '#000',
+        // },
         rightButtons: [{
           id: 'avatar',
           icon: require('../../assets/signin.png'),
@@ -30,10 +48,11 @@ export default class extends React.Component {
   }
   cursor = null
   firechat = new Firechat
+  offset = 44 + 20
 
   constructor(props){
     super(props)
-    Navigation.events().bindComponent(this)
+    Navigation.events().bindComponent(this) 
   }
 
   navigationButtonPressed() {
@@ -42,9 +61,7 @@ export default class extends React.Component {
         name: 'Profile',
         options: {
           bottomTabs: { 
-            visible: false, 
-            drawBehind: true, 
-            animate: true 
+            visible: false
           },
         }
       }
@@ -58,8 +75,10 @@ export default class extends React.Component {
   componentWillMount(){
     this.room = this.props.room    
     this.unsubscribe = this.firechat.getOnMessages(this.room.id, ({messages, cursor}) => {
-      this.getMessages(this.removeDuplicates(GiftedChat.append(this.state.messages, messages), "_id"), cursor)
+      const oldMessages = this.state.messages
+      this.getMessages(this.removeDuplicates(oldMessages.concat(messages), "_id"), cursor)
     }) 
+
   }
 
   componentWillUnmount(){
@@ -68,9 +87,10 @@ export default class extends React.Component {
   }
 
   onLoadEarlier = () => {
-    this.setState({isLoadingEarlier: true, messages: this.state.messages.concat() }) //https://github.com/FaridSafi/react-native-gifted-chat/pull/1047 render only updates with messages state changes
+    this.setState({isLoadingEarlier: true }) 
     this.firechat.getMessages(this.room.id, this.cursor).then(({messages, cursor}) => {
-      this.getMessages(this.removeDuplicates(GiftedChat.prepend(this.state.messages, messages), "_id"), cursor)
+      const oldMessages = this.state.messages
+      this.getMessages(this.removeDuplicates(messages.concat(oldMessages), "_id"), cursor)
     })
   }
 
@@ -79,11 +99,12 @@ export default class extends React.Component {
     if(cursor)
       loadEarlier = true
     this.setState({
-      messages,
+      messages,//: messages.reverse(),
       loadEarlier,
       isLoadingEarlier: false,
     })
     this.cursor = cursor
+    // this.flatList.scrollToEnd({animated: false})
   }
 
   onSend = messages => {
@@ -92,18 +113,6 @@ export default class extends React.Component {
         return
     }
     this.firechat.createMessages(this.room.id, messages)
-  }
-
-  renderSend = props => {
-    return <Send {...props} textStyle={{color: '#fc6157'}} label={"Enviar"}/>
-  }
-
-  renderComposer = props => {
-    return <Composer {...props} textInputStyle={{color: '#fff'}} textInputProps={{keyboardAppearance: 'dark'}} placeholderTextColor='#444' placeholder={'Escrever mensagem..'} />
-  }
-
-  renderInputToolbar = props => {
-    return <InputToolbar {...props} containerStyle={{backgroundColor:'#333', borderTopColor: '#444'}}  />
   }
 
   renderBubble = props => {
@@ -130,24 +139,145 @@ export default class extends React.Component {
     )
   }
 
-  render() {
+  renderMessagesContainer(){
     return (
-        <GiftedChat
-          messages={this.state.messages}
-          onSend={this.onSend}
-          loadEarlier={this.state.loadEarlier}
-          isLoadingEarlier={this.state.isLoadingEarlier}
-          onLoadEarlier={this.onLoadEarlier}
-          label={"carregar mais"}
-          alwaysShowSend={true}
-          user={{_id: this.firechat.userId}}
-          locale={'pt-br'}
-          renderSend={this.renderSend}
-          renderComposer={this.renderComposer}
-          renderAvatar={null}
-          renderBubble={this.renderBubble}
-          renderInputToolbar={this.renderInputToolbar}
-        />
+      <FlatList
+      initialNumToRender={30}
+      inverted={true}
+      contentInset={{top: -this.offset, left: 0, bottom: this.offset, right: 0}}
+      keyboardDismissMode='interactive'
+      data={this.state.messages}
+      keyExtractor={item => item._id}
+      renderItem={({ item, index }) => {
+        if(item.user._id != this.firechat.userId){
+          return (
+            <React.Fragment>
+              <Day currentMessage={item} nextMessage={this.state.messages[index+1] || {}} />
+              <View style={styles.textBubbleBackground}><Text style={styles.text}>{item.text}</Text></View>
+            </React.Fragment>
+          )
+        } else {
+          return (
+            <React.Fragment>
+              <Day currentMessage={item} nextMessage={this.state.messages[index+1] || {}} />
+              <View style={styles.textBubbleBackground2}><Text style={styles.text}>{item.text}</Text></View>
+            </React.Fragment>
+          )
+        }
+      }} />
     )
   }
+
+  renderToolbar(){
+    const toolbar = (
+      <View style={{flexDirection: 'row', borderTopColor: '#444', borderTopWidth: 0.5, backgroundColor: '#222'}}>
+        <TextInput
+          style={{flex: 1, color: 'white'}}
+          onChangeText={text => {
+            this.setState({text})
+          }}
+          keyboardAppearance={'dark'}
+          value={this.state.text}
+          placeholderTextColor='#444'
+          placeholder={'Escrever mensagem..'}
+          multiline={true}
+        />
+        <Button
+          color='#fc6157'
+          onPress={() => {
+            this.onSend([{text: this.state.text}])
+          }}
+          title="Enviar"
+        />
+      </View>
+    )
+    // if(Platform.OS == "ios"){
+    //   return (
+    //     <InputAccessoryView>
+    //       {toolbar}
+    //     </InputAccessoryView>
+    //   )
+    // }
+    return toolbar
+  }
+
+  render() {
+    const chat = (
+      <React.Fragment>
+        {this.renderMessagesContainer()}
+        {this.renderToolbar()}
+      </React.Fragment>
+    )
+    if(Platform.OS == "ios"){
+      return (
+        <KeyboardAvoidingView behavior={'padding'} style={{flex: 1}}>
+          {chat}
+        </KeyboardAvoidingView>
+      )
+    } else {
+      return (
+        <View style={{flex: 1}}>
+          {chat}
+        </View>
+      )
+    }
+  }
+}
+
+const styles = StyleSheet.create({
+  text: {
+    padding: 10,
+    color: 'white',
+  },
+  textBubbleBackground: {
+    alignSelf: 'flex-start',
+    backgroundColor: '#222',
+    borderRadius: 10,
+    minWidth: 110,
+    maxWidth: 300,
+    margin: 2,
+  },
+  textBubbleBackground2: {
+    alignSelf: 'flex-end',
+    backgroundColor: '#fc6157',
+    borderRadius: 10,
+    minWidth: 110,
+    maxWidth: 300,
+    margin: 2,
+  },
+  container: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 5,
+    marginBottom: 10,
+  },
+  text2: {
+    color: 'white',
+    fontSize: 12,
+    fontWeight: '600',
+  },
+})
+
+const Day = ({currentMessage, nextMessage}) => {
+  if (!isSameDay(currentMessage, nextMessage)) {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.text2}>
+          {moment(currentMessage.createdAt)
+            // .locale(context.getLocale())
+            .format('dddd')
+            }
+        </Text>
+      </View>
+    )
+  }
+  return null
+}
+
+const isSameDay = (currentMessage, nextMessage) => {
+  if (!nextMessage.createdAt)
+    return false
+  const currentCreatedAt = moment(currentMessage.createdAt)
+  const diffCreatedAt = moment(nextMessage.createdAt)
+  return currentCreatedAt.isSame(diffCreatedAt, 'day')
 }

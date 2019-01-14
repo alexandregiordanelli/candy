@@ -8,18 +8,10 @@ import {
   TouchableOpacity
 } from 'react-native'
 import Firechat from '../Firechat'
-//import Geofire from 'geofire'
 import { connect } from 'react-redux'
 
-@connect(state => ({geofire: state.geofire}))
+//@connect(state => ({geofire: state.geofire}))
 export default class extends React.Component {
-  static get options() { 
-    return {         
-      statusBar: {
-        style: 'light'
-      },
-    }
-  }
 
   state = {
       users: [],
@@ -228,14 +220,6 @@ export default class extends React.Component {
     return ( 
       <FlatList contentContainerStyle={{paddingRight: 1}} data={this.state.users} numColumns={4} keyExtractor={item => item.id} renderItem={({ item }) => (
           <TouchableOpacity style={{flex: 1, marginLeft: 1, marginBottom: 1}} onPress={()=>{
-            // Navigation.showModal({
-            //   component: {
-            //     name: 'Profile',
-            //     passProps: {
-            //       user: item
-            //     },
-            //   }
-            // })
             Navigation.push(this.props.componentId, { 
               component: { 
                 name: 'Profile',
@@ -243,15 +227,23 @@ export default class extends React.Component {
                   user: item
                 },
                 options: {
+                  customTransition: {
+                    animations: [
+                      { type: 'sharedElement', fromId: item.id, toId: 'cover', startDelay: 0, springVelocity: 0.2, duration: 0.2 }
+                    ],
+                    duration: 0.3
+                  },
                   bottomTabs: { 
-                    visible: false,
+                    visible: false
                   },
                 }
               }
             })
           }}>
-                <Image resizeMode='cover' style={{flex:1, aspectRatio: 1}} source={{uri: item.avatar}}/>
-                <Text style={{color: "#fff", backgroundColor: 'rgba(0,0,0,0.4)', fontSize: 11, position: 'absolute', right: 0, bottom:0}}>{item.distance} m</Text>
+            <Navigation.Element elementId={item.id}>
+              <Image resizeMode='cover' style={{flex:1, aspectRatio: 1}} source={{uri: item.avatar}}/>
+            </Navigation.Element>
+            <Text style={{color: "#fff", backgroundColor: 'rgba(0,0,0,0.4)', fontSize: 11, position: 'absolute', right: 0, bottom:0}}>{item.distance} m</Text>
           </TouchableOpacity>
           )} 
       />
