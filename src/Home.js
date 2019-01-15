@@ -230,7 +230,8 @@ export default class extends React.Component {
                     duration: 0.3
                   },
                   bottomTabs: { 
-                    visible: false
+                    visible: false,
+                    drawBehind: true
                   },
                 }
               }

@@ -25,7 +25,8 @@ export default class extends React.Component {
                       },
                       options: {
                           bottomTabs: { 
-                              visible: false
+                              visible: false,
+                              drawBehind: true
                           },
                       }
                   }
