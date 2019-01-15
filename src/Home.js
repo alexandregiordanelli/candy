@@ -4,13 +4,10 @@ import {
   Text,
   FlatList,
   Image,
-  View,
   TouchableOpacity
 } from 'react-native'
-import Firechat from '../Firechat'
-import { connect } from 'react-redux'
+import Firechat from './Firechat'
 
-//@connect(state => ({geofire: state.geofire}))
 export default class extends React.Component {
 
   state = {

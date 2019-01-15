@@ -2,7 +2,7 @@ import React from "react"
 import { FlatList } from 'react-native'
 import { connect } from 'react-redux'
 import MessageItem from './MessageItem'
-import Firechat from '../Firechat'
+import Firechat from './Firechat'
 
 @connect(state => ({rooms: state.rooms}))
 export default class extends React.Component {

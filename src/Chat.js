@@ -1,19 +1,14 @@
 import React from 'react'
 import { Navigation } from "react-native-navigation"
-import Firechat from '../Firechat'
+import Firechat from './Firechat'
 import {
   Text,
   FlatList,
-  Image,
   View,
-  TouchableOpacity,
-  ScrollView,
   TextInput,
   InputAccessoryView,
   Button,
-  Dimensions,
   StyleSheet,
-  Keyboard,
   KeyboardAvoidingView,
   Platform
 } from 'react-native'
@@ -29,10 +24,6 @@ export default class extends React.Component {
         drawBehind: true
       },
       topBar: {
-        // drawBehind: false,
-        // background: {
-        //   color: '#000',
-        // },
         rightButtons: [{
           id: 'avatar',
           icon: require('../../assets/signin.png'),
@@ -99,12 +90,11 @@ export default class extends React.Component {
     if(cursor)
       loadEarlier = true
     this.setState({
-      messages,//: messages.reverse(),
+      messages,
       loadEarlier,
       isLoadingEarlier: false,
     })
     this.cursor = cursor
-    // this.flatList.scrollToEnd({animated: false})
   }
 
   onSend = messages => {

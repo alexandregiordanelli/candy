@@ -8,7 +8,7 @@ import {
   Image,
 } from 'react-native'
 
-import Firechat from '../Firechat'
+import Firechat from './Firechat'
 
 export default class Profile extends React.Component {
   static get options(){

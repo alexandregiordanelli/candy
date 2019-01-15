@@ -2,11 +2,11 @@ import { Navigation } from "react-native-navigation"
 import { createStore, combineReducers } from 'redux'
 import { Provider } from "react-redux"
 import Firechat from "./Firechat"
-import Login from "./LoginScreen/Login"
-import Home from "./HomeScreen/Home"
-import Messages from "./MessagesScreen/Messages"
-import Chat from "./ChatScreen/Chat"
-import Profile from "./ProfileScreen/Profile"
+import Login from "./Login"
+import Home from "./Home"
+import Messages from "./Messages"
+import Chat from "./Chat"
+import Profile from "./Profile"
 import { Platform } from 'react-native'
 
 console.disableYellowBox = true
