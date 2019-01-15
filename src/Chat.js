@@ -13,6 +13,7 @@ import {
   Platform,
   Image
 } from 'react-native'
+import Icon from "react-native-vector-icons/Ionicons"
 
 import moment from 'moment'
 import "moment/locale/pt-br"
@@ -100,35 +101,12 @@ export default class extends React.Component {
     this.firechat.createMessages(this.room.id, messages)
   }
 
-  renderBubble = props => {
-    return (
-      <Bubble
-        {...props}
-        textStyle={{
-          left: {
-            color: 'white',
-          },
-          right: {
-            color: 'white',
-          },
-        }}
-        wrapperStyle={{
-          left: {
-            backgroundColor: '#222',
-          },
-          right: {
-            backgroundColor: '#fc6157'
-          }
-        }}
-      />
-    )
-  }
-
-  renderMessagesContainer(){
+  renderMessages(){
     return (
       <FlatList
       initialNumToRender={30}
       inverted={true}
+      contentContainerStyle={{padding: 8}}
       contentInset={{top: -this.offset, left: 0, bottom: this.offset, right: 0}}
       keyboardDismissMode='interactive'
       data={this.state.messages}
@@ -137,15 +115,29 @@ export default class extends React.Component {
         if(item.user._id != this.firechat.userId){
           return (
             <React.Fragment>
+              <View style={[styles.bubble, styles.left]}>
+                <Text style={styles.text}>{item.text}</Text>
+                <View style={{flexDirection: 'row', alignSelf: 'flex-end', height: 16}}>
+                  <Text style={styles.time}>{moment(item.createdAt).format("HH:mm")}</Text>
+                </View>
+              </View>
               <Day currentMessage={item} nextMessage={this.state.messages[index+1] || {}} />
-              <View style={styles.textBubbleBackground}><Text style={styles.text}>{item.text}</Text></View>
             </React.Fragment>
           )
         } else {
           return (
             <React.Fragment>
+              <View style={[styles.bubble, styles.right]}>
+                <Text style={styles.text}>{item.text}</Text>
+                <View style={{flexDirection: 'row', alignSelf: 'flex-end', height: 16}}>
+                  <Text style={styles.time}>{moment(item.createdAt).format("HH:mm")}</Text>
+                  <View style={{flexDirection: 'row', marginRight: 8}}>
+                    {item.sent && <Icon name="ios-checkmark" size={14} color="#fff" />}
+                    {item.received && <Icon name="ios-checkmark" size={14} color="#fff" />}
+                  </View>
+                </View>
+              </View>
               <Day currentMessage={item} nextMessage={this.state.messages[index+1] || {}} />
-              <View style={styles.textBubbleBackground2}><Text style={styles.text}>{item.text}</Text></View>
             </React.Fragment>
           )
         }
@@ -189,7 +181,7 @@ export default class extends React.Component {
   render() {
     const chat = (
       <React.Fragment>
-        {this.renderMessagesContainer()}
+        {this.renderMessages()}
         {this.renderToolbar()}
       </React.Fragment>
     )
@@ -211,23 +203,29 @@ export default class extends React.Component {
 
 const styles = StyleSheet.create({
   text: {
-    padding: 10,
     color: 'white',
+    margin: 8,
+    alignSelf: 'flex-start',
   },
-  textBubbleBackground: {
+  time: {
+    color: 'white',
+    fontSize: 9,
+    marginRight: 4,
+  },
+  left: {
     alignSelf: 'flex-start',
     backgroundColor: '#222',
-    borderRadius: 10,
-    minWidth: 110,
-    maxWidth: 300,
-    margin: 2,
   },
-  textBubbleBackground2: {
+  right: {
     alignSelf: 'flex-end',
     backgroundColor: '#fc6157',
-    borderRadius: 10,
-    minWidth: 110,
-    maxWidth: 300,
+  },
+  bubble: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'flex-end',
+    borderRadius: 5,
+    maxWidth: 250,
     margin: 2,
   },
   container: {
