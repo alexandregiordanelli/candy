@@ -77,7 +77,8 @@ Navigation.events().registerAppLaunchedListener(() => {
       backgroundColor: '#333'
     },
     statusBar: {
-      style: 'light'
+      style: 'light',
+      backgroundColor: '#222'
     },
     bottomTab: {
       textColor: '#666',
