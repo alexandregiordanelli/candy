@@ -6,7 +6,9 @@ import {
   Button,
   StyleSheet,
   Image,
+  TouchableOpacity,
 } from 'react-native'
+import Icon from "react-native-vector-icons/SimpleLineIcons"
 
 import Firechat from './Firechat'
 
@@ -15,7 +17,7 @@ export default class Profile extends React.Component {
     return {
       topBar: {
         visible: false,
-        drawBehind: true
+        drawBehind: true,
       }
     }
   }
@@ -37,10 +39,41 @@ export default class Profile extends React.Component {
         <Navigation.Element elementId={'cover'}>
           <Image resizeMode='cover' style={{aspectRatio: 1}} source={{uri: user.avatar}}/>
         </Navigation.Element>
-        <Button
+
+        <View style={{flexDirection: 'row', flex:1, justifyContent: 'center', position: 'absolute', bottom:0, left: 0, right: 0}}>
+          <TouchableOpacity 
+          style={{width: 60, height: 60, borderRadius: 30, backgroundColor: '#222', justifyContent: 'center', alignItems: 'center', margin: 20}}
           onPress={() => Navigation.pop(this.props.componentId)}
-          title="Sair"
-        />
+          >
+            <Icon 
+            name="arrow-left" size={20} 
+            color="#fff" 
+            />
+          </TouchableOpacity>
+          <TouchableOpacity 
+          style={{width: 60, height: 60, borderRadius: 30, backgroundColor: '#222', justifyContent: 'center', alignItems: 'center', margin: 20}}
+          onPress={() => {
+            if(this.props.fromMessagesScreen){
+              Navigation.pop(this.props.componentId)
+            } else {
+              Navigation.push(this.props.componentId, { 
+                component: { 
+                  name: 'Chat',
+                  id: "Chat",
+                  passProps: {
+                    user: this.props.user
+                  }, 
+                }
+              })
+            }
+          }}
+          >
+            <Icon
+            name="bubble" size={20} 
+            color="#fff" 
+            />
+          </TouchableOpacity>
+        </View>
         <Button
           onPress={() => this.firechat.signOut()}
           title="Sair"

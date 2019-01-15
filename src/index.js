@@ -7,6 +7,7 @@ import Home from "./Home"
 import Messages from "./Messages"
 import Chat from "./Chat"
 import Profile from "./Profile"
+import RightButton from "./RightButton"
 import { Platform } from 'react-native'
 
 console.disableYellowBox = true
@@ -24,6 +25,7 @@ Navigation.registerComponentWithRedux('Home', () => Home, Provider, store)
 Navigation.registerComponentWithRedux('Messages', () => Messages, Provider, store)
 Navigation.registerComponentWithRedux('Chat', () => Chat, Provider, store)
 Navigation.registerComponentWithRedux('Profile', () => Profile, Provider, store)
+Navigation.registerComponent('RightButton', () => RightButton)
 
 Navigation.events().registerAppLaunchedListener(() => {
   new Firechat(store)

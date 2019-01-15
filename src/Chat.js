@@ -10,23 +10,35 @@ import {
   Button,
   StyleSheet,
   KeyboardAvoidingView,
-  Platform
+  Platform,
+  Image
 } from 'react-native'
 
 import moment from 'moment'
 import "moment/locale/pt-br"
 
 export default class extends React.Component {
-  static get options() {
+  
+  static options(props) {
+    const fromMessagesScreen = !!props.room
     return {
       bottomTabs: { 
         visible: false, 
         drawBehind: true
       },
-      topBar: {
+      topBar: { 
+        title: { 
+          text: fromMessagesScreen? props.room.anotherUser.name: props.user.name
+        },
         rightButtons: [{
           id: 'avatar',
-          icon: require('../assets/signin.png'),
+          component: {
+            name: 'RightButton',
+            passProps: {
+              user: fromMessagesScreen?  props.room.anotherUser: props.user,
+              fromMessagesScreen
+            }
+          },
         }],
       }
     }
@@ -41,35 +53,18 @@ export default class extends React.Component {
   firechat = new Firechat
   offset = 44 + 20
 
-  constructor(props){
-    super(props)
-    Navigation.events().bindComponent(this) 
-  }
-
-  navigationButtonPressed() {
-    Navigation.push(this.props.componentId, { 
-      component: { 
-        name: 'Profile',
-        options: {
-          bottomTabs: { 
-            visible: false
-          },
-        }
-      }
-    })
-  }
-
   removeDuplicates = (myArr, prop) => {
     return myArr.filter((obj, pos, arr) => arr.map(mapObj => mapObj[prop]).indexOf(obj[prop]) === pos)
   }
 
   componentWillMount(){
-    this.room = this.props.room    
-    this.unsubscribe = this.firechat.getOnMessages(this.room.id, ({messages, cursor}) => {
-      const oldMessages = this.state.messages
-      this.getMessages(this.removeDuplicates(oldMessages.concat(messages), "_id"), cursor)
-    }) 
-
+    this.room = this.props.room
+    if(this.room){
+      this.unsubscribe = this.firechat.getOnMessages(this.room.id, ({messages, cursor}) => {
+        const oldMessages = this.state.messages
+        this.storeMessages(this.removeDuplicates(oldMessages.concat(messages), "_id"), cursor)
+      }) 
+    }
   }
 
   componentWillUnmount(){
@@ -81,11 +76,11 @@ export default class extends React.Component {
     this.setState({isLoadingEarlier: true }) 
     this.firechat.getMessages(this.room.id, this.cursor).then(({messages, cursor}) => {
       const oldMessages = this.state.messages
-      this.getMessages(this.removeDuplicates(messages.concat(oldMessages), "_id"), cursor)
+      this.storeMessages(this.removeDuplicates(messages.concat(oldMessages), "_id"), cursor)
     })
   }
 
-  getMessages = (messages, cursor) => {
+  storeMessages = (messages, cursor) => {
     let loadEarlier = false
     if(cursor)
       loadEarlier = true

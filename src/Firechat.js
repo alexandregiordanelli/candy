@@ -160,6 +160,8 @@ export default class Firechat {
           createdAt: timestamp,
           updatedAt: timestamp,
           lastMessage: ""
+        }).then(doc => {
+          doc.id
         })
       }
     })

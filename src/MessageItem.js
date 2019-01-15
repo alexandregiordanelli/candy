@@ -34,16 +34,10 @@ export default class extends Component {
           Navigation.push(this.props.componentId, { 
             component: { 
               name: 'Chat',
+              id: "Chat",
               passProps: {
                 room: this.props.room
               }, 
-              options: {
-                topBar: { 
-                  title: { 
-                    text: this.props.room.anotherUser.name 
-                  }
-                }
-              }
             }
           })
         }}>

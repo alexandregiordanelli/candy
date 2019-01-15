@@ -19,9 +19,8 @@ export default class extends React.Component {
     this.firechat = new Firechat
   }
 
-  async componentDidMount() {
-    const users = await this.firechat.getUsersNearby(400)
-    this.setState({users})
+  componentDidMount() {
+    this.firechat.getUsersNearby(400).then(users => this.setState({users}))
     //this.createFakeUsers()
   }
 
