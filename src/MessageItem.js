@@ -36,7 +36,8 @@ export default class extends Component {
               name: 'Chat',
               id: "Chat",
               passProps: {
-                room: this.props.room
+                roomId: this.props.room.id,
+                user: this.props.room.anotherUser
               }, 
             }
           })

@@ -238,7 +238,7 @@ export default class extends React.Component {
             })
           }}>
             <Navigation.Element elementId={item.id}>
-              <Image resizeMode='cover' style={{flex:1, aspectRatio: 1}} source={{uri: item.avatar}}/>
+              <Image resizeMode='cover' style={{flex:1, aspectRatio: 1}} source={{uri: item.avatar}} blurRadius={0}/>
             </Navigation.Element>
             <Text style={{color: "#fff", backgroundColor: 'rgba(0,0,0,0.4)', fontSize: 11, position: 'absolute', right: 0, bottom:0}}>{item.distance} m</Text>
           </TouchableOpacity>

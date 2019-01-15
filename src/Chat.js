@@ -22,7 +22,7 @@ import "moment/locale/pt-br"
 export default class extends React.Component {
   
   static options(props) {
-    const fromMessagesScreen = !!props.room
+    const fromMessagesScreen = !!props.roomId
     return {
       bottomTabs: { 
         visible: false, 
@@ -30,14 +30,14 @@ export default class extends React.Component {
       },
       topBar: { 
         title: { 
-          text: fromMessagesScreen? props.room.anotherUser.name: props.user.name
+          text: props.user.name
         },
         rightButtons: [{
           id: 'avatar',
           component: {
             name: 'RightButton',
             passProps: {
-              user: fromMessagesScreen?  props.room.anotherUser: props.user,
+              user: props.user,
               fromMessagesScreen
             }
           },
@@ -49,7 +49,8 @@ export default class extends React.Component {
   state = {
     messages: [],
     loadEarlier: false,
-    isLoadingEarlier: false
+    isLoadingEarlier: false,
+    text: ''
   }
   cursor = null
   firechat = new Firechat
@@ -59,14 +60,10 @@ export default class extends React.Component {
     return myArr.filter((obj, pos, arr) => arr.map(mapObj => mapObj[prop]).indexOf(obj[prop]) === pos)
   }
 
-  componentWillMount(){
-    this.room = this.props.room
-    if(this.room){
-      this.unsubscribe = this.firechat.getOnMessages(this.room.id, ({messages, cursor}) => {
-        const oldMessages = this.state.messages
-        this.storeMessages(this.removeDuplicates(messages.concat(oldMessages), "_id"), cursor)
-      }) 
-    }
+  async componentWillMount(){
+    this.roomId = this.props.roomId? this.props.roomId: await this.firechat.getRoom(this.props.user.id)
+    if(this.roomId)
+      this.subscribe(this.roomId)
   }
 
   componentWillUnmount(){
@@ -74,9 +71,16 @@ export default class extends React.Component {
       this.unsubscribe()
   }
 
+  subscribe = roomId => {
+    this.unsubscribe = this.firechat.getOnMessages(roomId, ({messages, cursor}) => {
+      const oldMessages = this.state.messages
+      this.storeMessages(this.removeDuplicates(messages.concat(oldMessages), "_id"), cursor)
+    }) 
+  }
+
   onLoadEarlier = () => {
     this.setState({isLoadingEarlier: true }) 
-    this.firechat.getMessages(this.room.id, this.cursor).then(({messages, cursor}) => {
+    this.firechat.getMessages(this.roomId, this.cursor).then(({messages, cursor}) => {
       const oldMessages = this.state.messages
       this.storeMessages(this.removeDuplicates(messages.concat(oldMessages), "_id"), cursor)
     })
@@ -94,12 +98,17 @@ export default class extends React.Component {
     this.cursor = cursor
   }
 
-  onSend = messages => {
+  onSend = async messages => {
+    this.setState({text: ''})
     for(let message of messages){
       if(message.text.trim() == "")
         return
     }
-    this.firechat.createMessages(this.room.id, messages)
+    if(!this.roomId){
+      this.roomId = await this.firechat.createRoom(this.props.user.id)
+      this.subscribe(this.roomId)
+    }
+    this.firechat.createMessages(this.roomId, messages)
   }
 
   renderMessages(){
@@ -146,9 +155,9 @@ export default class extends React.Component {
 
   renderToolbar(){
     const toolbar = (
-      <SafeAreaView style={{flexDirection: 'row', borderTopColor: '#444', borderTopWidth: 0.5, backgroundColor: '#222'}}>
+      <SafeAreaView style={{flexDirection: 'row', alignItems: 'center', borderTopColor: '#444', borderTopWidth: 0.5, backgroundColor: '#222'}}>
         <TextInput
-          style={{flex: 1, color: 'white'}}
+          style={{flex: 1, color: 'white', paddingTop: 0, fontSize: 16, margin: 8}}
           onChangeText={text => {
             this.setState({text})
           }}

@@ -144,11 +144,19 @@ export default class Firechat {
       return resp
   }
 
+  getRoom(uid){
+    return this.roomsRef.where(`users.${this.userId}`,'==', true).where(`users.${uid}`,'==', true).get().then(querySnapshot => {
+      if(querySnapshot.empty)
+        return null
+      return querySnapshot.docs[0].id
+    })
+  }
+
   createRoom(uid){
-    this.roomsRef.where(`users.${this.userId}`,'==', true).where(`users.${uid}`,'==', true).get().then(querySnapshot => {
-      if(querySnapshot.empty){
+    return this.getRoom(uid).then(id => {
+      if(id == null){
         const timestamp = firebase.firestore.FieldValue.serverTimestamp()
-        this.roomsRef.add({
+        return this.roomsRef.add({
           users: {
             [this.userId]: true,
             [uid]: true,
@@ -160,9 +168,9 @@ export default class Firechat {
           createdAt: timestamp,
           updatedAt: timestamp,
           lastMessage: ""
-        }).then(doc => {
-          doc.id
-        })
+        }).then(doc => doc.id)
+      } else {
+        return id
       }
     })
   }
@@ -184,10 +192,11 @@ export default class Firechat {
           }
           let room = { 
             notifications,
-            updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
           }
-          if(lastMessage)
+          if(lastMessage){
             room.lastMessage = lastMessage
+            room.updatedAt = firebase.firestore.FieldValue.serverTimestamp()
+          }
           transaction.update(ref, room)
       })
     }).then(e => {

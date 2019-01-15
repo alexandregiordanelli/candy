@@ -35,7 +35,7 @@ export default class extends React.Component {
               Navigation.pop("Chat")
             }
           }}>
-            <Image style={styles.button} source={{ uri: this.props.user.avatar }} />
+            <Image style={styles.button} source={{ uri: this.props.user.avatar }} blurRadius={0}/>
           </TouchableOpacity>
       </View>
     )
