@@ -26,7 +26,7 @@ export default class extends React.Component {
       topBar: {
         rightButtons: [{
           id: 'avatar',
-          icon: require('../../assets/signin.png'),
+          icon: require('../assets/signin.png'),
         }],
       }
     }
