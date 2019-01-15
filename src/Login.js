@@ -11,6 +11,7 @@ export default class extends Component {
         title: {
           text: 'Login'
         },
+        drawBehind: false
       }
     };
   }

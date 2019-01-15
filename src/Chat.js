@@ -11,7 +11,8 @@ import {
   StyleSheet,
   KeyboardAvoidingView,
   Platform,
-  Image
+  Image,
+  SafeAreaView
 } from 'react-native'
 import Icon from "react-native-vector-icons/Ionicons"
 
@@ -145,7 +146,7 @@ export default class extends React.Component {
 
   renderToolbar(){
     const toolbar = (
-      <View style={{flexDirection: 'row', borderTopColor: '#444', borderTopWidth: 0.5, backgroundColor: '#222'}}>
+      <SafeAreaView style={{flexDirection: 'row', borderTopColor: '#444', borderTopWidth: 0.5, backgroundColor: '#222'}}>
         <TextInput
           style={{flex: 1, color: 'white'}}
           onChangeText={text => {
@@ -164,7 +165,7 @@ export default class extends React.Component {
           }}
           title="Enviar"
         />
-      </View>
+      </SafeAreaView>
     )
     // if(Platform.OS == "ios"){
     //   return (

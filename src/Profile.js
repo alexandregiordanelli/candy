@@ -23,7 +23,7 @@ export default class Profile extends React.Component {
   }
 
   state = {
-    user: null
+    user: {}
   }
 
   firechat = new Firechat
@@ -42,7 +42,7 @@ export default class Profile extends React.Component {
           <Text style={{color: 'white', fontSize: 26, margin: 20}}>{user.name}</Text>
         {this.props.user && <View style={{flexDirection: 'row', flex:1, justifyContent: 'center', position: 'absolute', bottom:0, left: 0, right: 0}}>
           <TouchableOpacity 
-          style={{width: 60, height: 60, borderRadius: 30, backgroundColor: '#222', justifyContent: 'center', alignItems: 'center', margin: 20}}
+          style={{width: 60, height: 60, borderRadius: 30, backgroundColor: '#222', justifyContent: 'center', alignItems: 'center', margin: 30}}
           onPress={() => Navigation.pop(this.props.componentId)}
           >
             <Icon 
@@ -51,7 +51,7 @@ export default class Profile extends React.Component {
             />
           </TouchableOpacity>
           <TouchableOpacity 
-          style={{width: 60, height: 60, borderRadius: 30, backgroundColor: '#222', justifyContent: 'center', alignItems: 'center', margin: 20}}
+          style={{width: 60, height: 60, borderRadius: 30, backgroundColor: '#222', justifyContent: 'center', alignItems: 'center', margin: 30}}
           onPress={() => {
             if(this.props.fromMessagesScreen){
               Navigation.pop(this.props.componentId)
