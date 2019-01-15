@@ -75,7 +75,7 @@ export default class Profile extends React.Component {
           </TouchableOpacity>
         </View>}
         {!this.props.user && <Button
-          color='white'
+          color='#fc6157'
           onPress={() => this.firechat.signOut()}
           title="Sair"
         />}
