@@ -18,19 +18,19 @@ export default class Firechat {
     this.db.settings({ timestampsInSnapshots: true })
     this.roomsRef = this.db.collection("rooms")
     this.usersRef = this.db.collection("users")
-    this.nMax = 20
+    this.nMax = 100
 
     firebase.auth().onAuthStateChanged(async user => {
       if(user){
         this.userId = user.uid
         if(isEmulator){
           if(Platform.OS == "ios")
-            this.userId = "NLXyeIMnS3QriEQ9vWH772Ltdn12"
+            this.userId = "NLXyeIMnS3QriEQ9vWH772Ltdn12" //molly
           else  //android
-            this.userId = "NLXyeIMnS3QriEQ9vWH772Ltdn12"
+            this.userId = "Zpnu7UOiola1egCMSk3D" // 
         } 
         else //device
-          this.userId = "ua2ezI5QJceHg5XhX17kiJvEY132"
+          this.userId = "ua2ezI5QJceHg5XhX17kiJvEY132" //alicia
         await this.getUser()
         if(!this.user) 
           await this.createUser()

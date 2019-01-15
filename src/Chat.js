@@ -3,7 +3,7 @@ import { Navigation } from "react-native-navigation"
 import Firechat from './Firechat'
 import {
   Text,
-  FlatList,
+  SectionList,
   View,
   TextInput,
   InputAccessoryView,
@@ -48,6 +48,7 @@ export default class extends React.Component {
 
   state = {
     messages: [],
+    messagesInSections: [],
     loadEarlier: false,
     isLoadingEarlier: false,
     text: ''
@@ -82,8 +83,36 @@ export default class extends React.Component {
     this.setState({isLoadingEarlier: true }) 
     this.firechat.getMessages(this.roomId, this.cursor).then(({messages, cursor}) => {
       const oldMessages = this.state.messages
-      this.storeMessages(this.removeDuplicates(messages.concat(oldMessages), "_id"), cursor)
+      this.storeMessages(this.removeDuplicates(oldMessages.concat(messages), "_id"), cursor)
     })
+  }
+
+  splitToSections = messages => {
+    let sectionListData = []
+    for(message of messages){
+      const title = moment(message.createdAt).calendar(null, {
+        sameDay: '[Hoje]',
+        lastDay: '[Ontem]',
+        lastWeek: 'dddd',
+        sameElse: 'DD/MM/YYYY'
+      })
+      let hasTitle = -1
+      for(let i = 0; i < sectionListData.length; i++){
+        if(sectionListData[i].title == title){
+          hasTitle = i
+          break
+        }
+      }
+      if(hasTitle > -1){
+        sectionListData[hasTitle].data.push(message)
+      } else {
+        sectionListData.push({
+          data: [message],
+          title
+        })
+      }
+    }
+    return sectionListData
   }
 
   storeMessages = (messages, cursor) => {
@@ -91,7 +120,8 @@ export default class extends React.Component {
     if(cursor)
       loadEarlier = true
     this.setState({
-      messages,
+      messages: messages,
+      messagesInSections: this.splitToSections(messages),
       loadEarlier,
       isLoadingEarlier: false,
     })
@@ -113,42 +143,38 @@ export default class extends React.Component {
 
   renderMessages(){
     return (
-      <FlatList
+      <SectionList
+      // style={{  transform: [{ scaleY: -1 }] }}
       initialNumToRender={30}
       inverted={true}
+      renderSectionFooter={({section})=>{
+        return (
+          <View style={styles.container}>
+            <Text style={styles.text2}>{section.title}</Text>
+          </View>
+        )
+      }}
       contentContainerStyle={{padding: 8}}
       contentInset={{top: -this.offset, left: 0, bottom: this.offset, right: 0}}
       keyboardDismissMode='interactive'
-      data={this.state.messages}
+      sections={this.state.messagesInSections}
       keyExtractor={item => item._id}
-      renderItem={({ item, index }) => {
-        if(item.user._id != this.firechat.userId){
-          return (
-            <React.Fragment>
-              <View style={[styles.bubble, styles.left]}>
-                <Text style={styles.text}>{item.text}</Text>
-                <View style={{flexDirection: 'row', alignSelf: 'flex-end', alignItems: 'flex-end', height: 18}}>
-                  <Text style={styles.time}>{moment(item.createdAt).format("HH:mm")}</Text>
-                </View>
-              </View>
-              <Day currentMessage={item} nextMessage={this.state.messages[index+1] || {}} />
-            </React.Fragment>
-          )
-        } else {
-          return (
-            <React.Fragment>
-              <View style={[styles.bubble, styles.right]}>
-                <Text style={styles.text}>{item.text}</Text>
-                <View style={{flexDirection: 'row', alignSelf: 'flex-end', alignItems: 'flex-end', height: 18, marginRight: 8}}>
-                  <Text style={styles.time}>{moment(item.createdAt).format("HH:mm")}</Text>
+      renderItem={({ item, index, section, separators }) => {
+        const me = item.user._id == this.firechat.userId? 'right': 'left'
+        return (
+          <React.Fragment>
+            <View style={[styles.bubble, styles[me]]}>
+              <Text style={styles.text}>{item.text}</Text>
+              <View style={{flexDirection: 'row', alignSelf: 'flex-end', alignItems: 'flex-end', height: 18, marginRight: me=="right"? 8: 0}}>
+                <Text style={styles.time}>{moment(item.createdAt).format("HH:mm")}</Text>
+                {me == "right" && <React.Fragment>
                   {item.sent && <Icon name="ios-checkmark" size={14} color="#fff" />}
                   {item.received && <Icon name="ios-checkmark" size={14} color="#fff" />}
-                </View>
+                </React.Fragment>}
               </View>
-              <Day currentMessage={item} nextMessage={this.state.messages[index+1] || {}} />
-            </React.Fragment>
-          )
-        }
+            </View>
+          </React.Fragment>
+        )
       }} />
     )
   }
@@ -250,27 +276,3 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
 })
-
-const Day = ({currentMessage, nextMessage}) => {
-  if (!isSameDay(currentMessage, nextMessage)) {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.text2}>
-          {moment(currentMessage.createdAt)
-            // .locale(context.getLocale())
-            .format('dddd')
-            }
-        </Text>
-      </View>
-    )
-  }
-  return null
-}
-
-const isSameDay = (currentMessage, nextMessage) => {
-  if (!nextMessage.createdAt)
-    return false
-  const currentCreatedAt = moment(currentMessage.createdAt)
-  const diffCreatedAt = moment(nextMessage.createdAt)
-  return currentCreatedAt.isSame(diffCreatedAt, 'day')
-}
