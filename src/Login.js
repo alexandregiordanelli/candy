@@ -1,154 +1,93 @@
 import React, { Component } from 'react'
-import { View, Button, Text, TextInput, Image } from 'react-native'
+import { View, Button, Text, TextInput, StyleSheet, KeyboardAvoidingView } from 'react-native'
 import firebase from 'react-native-firebase'
-
-const successImageUri = 'https://cdn.pixabay.com/photo/2015/06/09/16/12/icon-803718_1280.png'
 
 export default class extends Component {
   static get options() {
     return {
       topBar: {
         title: {
-          text: 'Login'
+          text: 'Candy'
         },
-        drawBehind: false
       }
     };
   }
 
-  constructor(props) {
-    super(props);
-    this.unsubscribe = null;
-
-    this.state = {
-      user: null,
-      message: '',
-      codeInput: '',
-      phoneNumber: '+5521971706747',
-      confirmResult: null,
-    };
+  state = {
+    message: '',
+    codeInput: '',
+    phoneNumber: '',
+    confirmResult: null,
   }
-
-  componentDidMount() {
-    this.unsubscribe = firebase.auth().onAuthStateChanged((user) => {
-      if (user) {
-        this.setState({ user: user.toJSON() });
-      } else {
-        // User has been signed out, reset the state
-        this.setState({
-          user: null,
-          message: '',
-          codeInput: '',
-          phoneNumber: '+5521971706747',
-          confirmResult: null,
-        });
-      }
-    });
-  }
-
-  componentWillUnmount() {
-     if (this.unsubscribe) this.unsubscribe();
-  }
-
-  signIn = () => {
-    const { phoneNumber } = this.state;
-    this.setState({ message: 'Sending code ...' });
-
-    firebase.auth().signInWithPhoneNumber(phoneNumber)
-      .then(confirmResult => this.setState({ confirmResult, message: 'Code has been sent!' }))
-      .catch(error => this.setState({ message: `Sign In With Phone Number Error: ${error.message}` }));
-  };
-
-  confirmCode = () => {
-    const { codeInput, confirmResult } = this.state;
-
-    if (confirmResult && codeInput.length) {
-      confirmResult.confirm(codeInput)
-        .then((user) => {
-          this.setState({ message: 'Code Confirmed!' });
-        })
-        .catch(error => this.setState({ message: `Code Confirm Error: ${error.message}` }));
-    }
-  };
-
-  signOut = () => {
-    firebase.auth().signOut();
-  }
-  
+ 
   renderPhoneNumberInput() {
-   const { phoneNumber } = this.state;
-      
     return (
-      <View style={{ padding: 25 }}>
-        <Text>Enter phone number:</Text>
+      <React.Fragment>
+        <Text style={styles.text}>Digite seu celular com o código da cidade</Text>
         <TextInput
           autoFocus
-          style={{ height: 40, marginTop: 15, marginBottom: 15 }}
+          keyboardType={'phone-pad'}
+          style={styles.input}
           onChangeText={value => this.setState({ phoneNumber: value })}
-          placeholder={'Phone number ... '}
-          value={phoneNumber}
+          placeholder={'21987654321'}
+          placeholderTextColor='#444'
+          value={this.state.phoneNumber}
         />
-        <Button title="Sign In" color="green" onPress={this.signIn} />
-      </View>
-    );
-  }
-  
-  renderMessage() {
-    const { message } = this.state;
-  
-    if (!message.length) return null;
-  
-    return (
-      <Text style={{ padding: 5, backgroundColor: '#000', color: '#fff' }}>{message}</Text>
-    );
+        <Button title="Enviar SMS com código" color="#fc6157" onPress={()=>{
+          this.setState({ message: 'Enviando o SMS com o código ...' })
+          firebase.auth().signInWithPhoneNumber('+55'+this.state.phoneNumber).then(confirmResult => {
+            this.setState({ confirmResult, message: 'Código foi enviado com sucesso!' })
+          }).catch(error => {
+            this.setState({ message: `Erro: ${error.message}` })
+          })
+        }} />
+      </React.Fragment>
+    )
   }
   
   renderVerificationCodeInput() {
-    const { codeInput } = this.state;
-  
     return (
-      <View style={{ marginTop: 25, padding: 25 }}>
-        <Text>Enter verification code below:</Text>
+      <React.Fragment>
+        <Text style={styles.text}>Digite o código recebido por SMS</Text>
         <TextInput
           autoFocus
-          style={{ height: 40, marginTop: 15, marginBottom: 15 }}
+          keyboardType={'number-pad'}
+          style={styles.input}
           onChangeText={value => this.setState({ codeInput: value })}
-          placeholder={'Code ... '}
-          value={codeInput}
+          placeholder={'123456'}
+          placeholderTextColor='#444'
+          value={this.state.codeInput}
         />
-        <Button title="Confirm Code" color="#841584" onPress={this.confirmCode} />
-      </View>
-    );
+        <Button title="Entrar" color="#fc6157" onPress={()=>{
+          this.state.confirmResult.confirm(this.state.codeInput).then(() => {
+              this.setState({ message: 'Código confirmado! Aguarde..' })
+          }).catch(error => {
+              this.setState({ message: `Erro ao confirmar o código: ${error.message}` })
+          })
+        }} />
+      </React.Fragment>
+    )
   }
 
   render() {
-    const { user, confirmResult } = this.state;
     return (
-      <View style={{ flex: 1 }}>
-        
-        {!user && !confirmResult && this.renderPhoneNumberInput()}
-        
-        {this.renderMessage()}
-        
-        {!user && confirmResult && this.renderVerificationCodeInput()}
-        
-        {user && (
-          <View
-            style={{
-              padding: 15,
-              justifyContent: 'center',
-              alignItems: 'center',
-              backgroundColor: '#77dd77',
-              flex: 1,
-            }}
-          >
-            <Image source={{ uri: successImageUri }} style={{ width: 100, height: 100, marginBottom: 25 }} />
-            <Text style={{ fontSize: 25 }}>Signed In!</Text>
-            <Text>{JSON.stringify(user)}</Text>
-            <Button title="Sign Out" color="red" onPress={this.signOut} />
-          </View>
-        )}
-      </View>
-    );
+      <KeyboardAvoidingView behavior={'padding'} style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        {!this.state.confirmResult && this.renderPhoneNumberInput()}
+        {this.state.confirmResult && this.renderVerificationCodeInput()}
+        {!!this.state.message.length && <Text style={styles.msg}>{this.state.message}</Text>}
+      </KeyboardAvoidingView>
+    )
   }
 }
+
+const styles = StyleSheet.create({
+  text: {
+    color: 'white', fontSize: 16
+  },
+  input: {
+    marginTop: 15, marginBottom: 15, fontSize: 28, color: 'white'
+  },
+  msg: {
+    padding: 5, backgroundColor: '#222', color: '#fff', fontSize: 16
+  }
+})

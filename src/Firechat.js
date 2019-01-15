@@ -18,7 +18,7 @@ export default class Firechat {
     this.db.settings({ timestampsInSnapshots: true })
     this.roomsRef = this.db.collection("rooms")
     this.usersRef = this.db.collection("users")
-    this.nMax = 100
+    this.nMax = 300
 
     firebase.auth().onAuthStateChanged(async user => {
       if(user){
