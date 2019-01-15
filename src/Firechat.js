@@ -120,7 +120,7 @@ export default class Firechat {
       const message = {
         ...data,
         _id: doc.id,
-        createdAt: data.createdAt,
+        createdAt: data.createdAt || new Date(),
         sent
       }
       if(data.user._id != this.userId && !data.received){

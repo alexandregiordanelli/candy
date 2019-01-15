@@ -63,7 +63,7 @@ export default class extends React.Component {
     if(this.room){
       this.unsubscribe = this.firechat.getOnMessages(this.room.id, ({messages, cursor}) => {
         const oldMessages = this.state.messages
-        this.storeMessages(this.removeDuplicates(oldMessages.concat(messages), "_id"), cursor)
+        this.storeMessages(this.removeDuplicates(messages.concat(oldMessages), "_id"), cursor)
       }) 
     }
   }
@@ -117,7 +117,7 @@ export default class extends React.Component {
             <React.Fragment>
               <View style={[styles.bubble, styles.left]}>
                 <Text style={styles.text}>{item.text}</Text>
-                <View style={{flexDirection: 'row', alignSelf: 'flex-end', height: 16}}>
+                <View style={{flexDirection: 'row', alignSelf: 'flex-end', alignItems: 'flex-end', height: 18}}>
                   <Text style={styles.time}>{moment(item.createdAt).format("HH:mm")}</Text>
                 </View>
               </View>
@@ -129,12 +129,10 @@ export default class extends React.Component {
             <React.Fragment>
               <View style={[styles.bubble, styles.right]}>
                 <Text style={styles.text}>{item.text}</Text>
-                <View style={{flexDirection: 'row', alignSelf: 'flex-end', height: 16}}>
+                <View style={{flexDirection: 'row', alignSelf: 'flex-end', alignItems: 'flex-end', height: 18, marginRight: 8}}>
                   <Text style={styles.time}>{moment(item.createdAt).format("HH:mm")}</Text>
-                  <View style={{flexDirection: 'row', marginRight: 8}}>
-                    {item.sent && <Icon name="ios-checkmark" size={14} color="#fff" />}
-                    {item.received && <Icon name="ios-checkmark" size={14} color="#fff" />}
-                  </View>
+                  {item.sent && <Icon name="ios-checkmark" size={14} color="#fff" />}
+                  {item.received && <Icon name="ios-checkmark" size={14} color="#fff" />}
                 </View>
               </View>
               <Day currentMessage={item} nextMessage={this.state.messages[index+1] || {}} />
@@ -205,12 +203,14 @@ const styles = StyleSheet.create({
   text: {
     color: 'white',
     margin: 8,
-    alignSelf: 'flex-start',
+    fontSize: 16,
+    lineHeight: 22,
   },
   time: {
     color: 'white',
-    fontSize: 9,
+    fontSize: 11,
     marginRight: 4,
+    marginBottom: 6,
   },
   left: {
     alignSelf: 'flex-start',

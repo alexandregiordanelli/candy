@@ -23,7 +23,7 @@ export default class Profile extends React.Component {
   }
 
   state = {
-    user: {}
+    user: null
   }
 
   firechat = new Firechat
@@ -39,8 +39,8 @@ export default class Profile extends React.Component {
         <Navigation.Element elementId={'cover'}>
           <Image resizeMode='cover' style={{aspectRatio: 1}} source={{uri: user.avatar}}/>
         </Navigation.Element>
-
-        <View style={{flexDirection: 'row', flex:1, justifyContent: 'center', position: 'absolute', bottom:0, left: 0, right: 0}}>
+          <Text style={{color: 'white', fontSize: 26, margin: 20}}>{user.name}</Text>
+        {this.props.user && <View style={{flexDirection: 'row', flex:1, justifyContent: 'center', position: 'absolute', bottom:0, left: 0, right: 0}}>
           <TouchableOpacity 
           style={{width: 60, height: 60, borderRadius: 30, backgroundColor: '#222', justifyContent: 'center', alignItems: 'center', margin: 20}}
           onPress={() => Navigation.pop(this.props.componentId)}
@@ -73,11 +73,12 @@ export default class Profile extends React.Component {
             color="#fff" 
             />
           </TouchableOpacity>
-        </View>
-        <Button
+        </View>}
+        {!this.props.user && <Button
+          color='white'
           onPress={() => this.firechat.signOut()}
           title="Sair"
-        />
+        />}
       </View>
     )
   }
