@@ -198,7 +198,7 @@ export default class extends React.Component {
     })
   }
 
-  makeRemoteRequest = async (point) => {
+  makeRemoteRequest = async point => {
     const res = await fetch('https://randomuser.me/api/?nat=br').then(res => res.json())
     const avatar = res.results[0].picture.large
     const name = res.results[0].name.first + " " + res.results[0].name.last
@@ -210,7 +210,7 @@ export default class extends React.Component {
       latitude,
       longitude
     }
-  };
+  }
 
   render() {
     return ( 

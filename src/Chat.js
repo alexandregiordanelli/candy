@@ -144,7 +144,6 @@ export default class extends React.Component {
   renderMessages(){
     return (
       <SectionList
-      // style={{  transform: [{ scaleY: -1 }] }}
       initialNumToRender={30}
       inverted={true}
       renderSectionFooter={({section})=>{

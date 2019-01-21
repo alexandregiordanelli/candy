@@ -21,8 +21,12 @@
 {
   [FIRApp configure];
   [RNFirebaseNotifications configure];
-  NSURL *jsCodeLocation = jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index" fallbackResource:nil];
 
+  #ifdef DEBUG
+    NSURL *jsCodeLocation = jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index" fallbackResource:nil];
+  #else
+    NSURL *jsCodeLocation = jsCodeLocation = [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
+  #endif
   [ReactNativeNavigation bootstrap:jsCodeLocation launchOptions:launchOptions];
   
   return YES;

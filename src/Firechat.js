@@ -10,27 +10,32 @@ export default class Firechat {
 
   static instance
 
+  logged = false
+
   constructor(store) {
     if(Firechat.instance)
       return Firechat.instance
-    this.db = firebase.firestore()
-    this.db2 = firebase.database()
+    this.firebase = firebase
+    this.db = this.firebase.firestore()
+    this.db2 = this.firebase.database()
     this.db.settings({ timestampsInSnapshots: true })
     this.roomsRef = this.db.collection("rooms")
     this.usersRef = this.db.collection("users")
     this.nMax = 300
 
-    firebase.auth().onAuthStateChanged(async user => {
+    this.firebase.auth().onAuthStateChanged(async user => {
+      //store.dispatch({type: "AUTH_CHANGE", logged: !!user})
       if(user){
         this.userId = user.uid
         if(isEmulator){
           if(Platform.OS == "ios")
-            this.userId = "NLXyeIMnS3QriEQ9vWH772Ltdn12" //molly
+            this.userId = "ua2ezI5QJceHg5XhX17kiJvEY132" //alicia 
           else  //android
             this.userId = "Zpnu7UOiola1egCMSk3D" // 
         } 
-        else //device
-          this.userId = "ua2ezI5QJceHg5XhX17kiJvEY132" //alicia
+        else {//device
+          this.userId = "NLXyeIMnS3QriEQ9vWH772Ltdn12" //molly
+        }
         await this.getUser()
         if(!this.user) 
           await this.createUser()
@@ -46,7 +51,7 @@ export default class Firechat {
   }
 
   signOut(){
-    firebase.auth().signOut()
+    this.firebase.auth().signOut()
   }
 
 
@@ -89,7 +94,7 @@ export default class Firechat {
         user: {
           _id: this.userId
         },
-        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+        createdAt: this.firebase.firestore.FieldValue.serverTimestamp(),
       }
       delete msg._id 
       this.roomsRef.doc(roomId).collection("messages").add(msg)
@@ -155,7 +160,7 @@ export default class Firechat {
   createRoom(uid){
     return this.getRoom(uid).then(id => {
       if(id == null){
-        const timestamp = firebase.firestore.FieldValue.serverTimestamp()
+        const timestamp = this.firebase.firestore.FieldValue.serverTimestamp()
         return this.roomsRef.add({
           users: {
             [this.userId]: true,
@@ -248,7 +253,7 @@ export default class Firechat {
   }
 
   async updatetUserLocation(latitude, longitude){
-    const location = new firebase.firestore.GeoPoint(latitude, longitude)
+    const location = new this.firebase.firestore.GeoPoint(latitude, longitude)
     await this.updateUser({
       geohash: encodeGeohash([location.latitude, location.longitude]),
       location
