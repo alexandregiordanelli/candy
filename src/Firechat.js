@@ -1,10 +1,9 @@
 import firebase from 'react-native-firebase'
-import { goLogin, goHome } from './navigation'
-import DeviceInfo from 'react-native-device-info'
-import { Platform } from 'react-native'
+//import DeviceInfo from 'react-native-device-info'
+//import { Platform } from 'react-native'
 import { getDocumentsNearby, encodeGeohash } from './Geofire'
 
-const isEmulator = DeviceInfo.isEmulator()
+//const isEmulator = DeviceInfo.isEmulator()
 
 export default class Firechat {
 
@@ -12,7 +11,7 @@ export default class Firechat {
 
   logged = false
 
-  constructor(store) {
+  constructor(action) {
     if(Firechat.instance)
       return Firechat.instance
     this.firebase = firebase
@@ -27,23 +26,23 @@ export default class Firechat {
       //store.dispatch({type: "AUTH_CHANGE", logged: !!user})
       if(user){
         this.userId = user.uid
-        if(isEmulator){
-          if(Platform.OS == "ios")
-            this.userId = "ua2ezI5QJceHg5XhX17kiJvEY132" //alicia 
-          else  //android
-            this.userId = "Zpnu7UOiola1egCMSk3D" // 
-        } 
-        else {//device
-          this.userId = "NLXyeIMnS3QriEQ9vWH772Ltdn12" //molly
-        }
+        // if(isEmulator){
+        //   if(Platform.OS == "ios")
+        //     this.userId = "ua2ezI5QJceHg5XhX17kiJvEY132" //alicia 
+        //   else  //android
+        //     this.userId = "Zpnu7UOiola1egCMSk3D" // 
+        // } 
+        // else {//device
+        //   this.userId = "NLXyeIMnS3QriEQ9vWH772Ltdn12" //molly
+        // }
         await this.getUser()
         if(!this.user) 
           await this.createUser()
         await this.updatetUserLocation(-22.9690888, -43.2041239)
-        goHome()
+        action.goHome()
       } else {
         this.userId = null
-        goLogin()
+        action.goLogin()
       }
     })
 

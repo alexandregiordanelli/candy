@@ -9,6 +9,7 @@ import Chat from "./Chat"
 import Profile from "./Profile"
 import RightButton from "./RightButton"
 import { Platform } from 'react-native'
+import { goLogin, goHome } from './navigation'
 
 console.disableYellowBox = true
 
@@ -28,7 +29,7 @@ Navigation.registerComponentWithRedux('Profile', () => Profile, Provider, store)
 Navigation.registerComponent('RightButton', () => RightButton)
 
 Navigation.events().registerAppLaunchedListener(() => {
-  new Firechat(store)
+  new Firechat({ goLogin, goHome })
 
   let options = {
     topBar: {
