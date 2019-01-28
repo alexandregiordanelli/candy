@@ -4,6 +4,7 @@ import Firechat from './Firechat'
 import {
   Text,
   SectionList,
+  FlatList,
   View,
   TextInput,
   InputAccessoryView,
@@ -12,12 +13,28 @@ import {
   KeyboardAvoidingView,
   Platform,
   Image,
-  SafeAreaView
+  SafeAreaView,
+  ScrollView,
+  TouchableOpacity,
+  PixelRatio,
+  NativeModules,
+  Dimensions,
+  RefreshControl
 } from 'react-native'
 import Icon from "react-native-vector-icons/Ionicons"
 
 import moment from 'moment'
 import "moment/locale/pt-br"
+
+import {AutoGrowingTextInput} from 'react-native-autogrow-textinput';
+import {BlurView} from 'react-native-blur';
+import {KeyboardAccessoryView, KeyboardUtils} from 'react-native-keyboard-input';
+
+import './demoKeyboards';
+
+const IsIOS = Platform.OS === 'ios';
+const TrackInteractive = true
+const screenSize = Dimensions.get('window')
 
 export default class extends React.Component {
   
@@ -47,12 +64,19 @@ export default class extends React.Component {
   }
 
   state = {
+    refreshing: false,
     messages: [],
     messagesInSections: [],
     loadEarlier: false,
     isLoadingEarlier: false,
-    text: ''
+    text: '',
+    customKeyboard: {
+      component: undefined,
+      initialProps: undefined,
+    },
+    receivedKeyboardData: undefined,
   }
+
   cursor = null
   firechat = new Firechat
   offset = 44 + 20
@@ -74,20 +98,21 @@ export default class extends React.Component {
 
   subscribe = roomId => {
     this.unsubscribe = this.firechat.getOnMessages(roomId, ({messages, cursor}) => {
-      const oldMessages = this.state.messages
-      this.storeMessages(this.removeDuplicates(messages.concat(oldMessages), "_id"), cursor)
+      const newMessages = this.removeDuplicates(messages.concat(this.state.messages), "_id").sort((a,b)=>a.createdAt - b.createdAt)
+      this.storeMessages(newMessages, cursor)
     }) 
   }
 
   onLoadEarlier = () => {
     this.setState({isLoadingEarlier: true }) 
     this.firechat.getMessages(this.roomId, this.cursor).then(({messages, cursor}) => {
-      const oldMessages = this.state.messages
-      this.storeMessages(this.removeDuplicates(oldMessages.concat(messages), "_id"), cursor)
+      const newMessages = this.removeDuplicates(messages.concat(this.state.messages), "_id").sort((a,b)=>a.createdAt - b.createdAt)
+      this.storeMessages(newMessages, cursor)
     })
   }
 
-  splitToSections = messages => {
+
+  splitToSections = (messages) => {
     let sectionListData = []
     for(message of messages){
       const title = moment(message.createdAt).calendar(null, {
@@ -138,99 +163,142 @@ export default class extends React.Component {
       this.roomId = await this.firechat.createRoom(this.props.user.id)
       this.subscribe(this.roomId)
     }
+
     this.firechat.createMessages(this.roomId, messages)
+    KeyboardUtils.dismiss()
+  }
+ 
+  getToolbarButtons = () => {
+    return [
+      {
+        text: 'show1',
+        testID: 'show1',
+        onPress: () => this.showKeyboardView('KeyboardView', 'FIRST - 1 (passed prop)'),
+      },
+      {
+        text: 'show2',
+        testID: 'show2',
+        onPress: () => this.showKeyboardView('AnotherKeyboardView', 'SECOND - 2 (passed prop)'),
+      },
+      {
+        text: 'reset',
+        testID: 'reset',
+        onPress: () => this.resetKeyboardView(),
+      },
+    ];
   }
 
-  renderMessages(){
+  resetKeyboardView = () => {
+    this.setState({customKeyboard: {}});
+  }
+
+  onKeyboardResigned = () => {
+    this.resetKeyboardView();
+  }
+
+  showKeyboardView = (component, title) => {
+    this.setState({
+      customKeyboard: {
+        component,
+        initialProps: {title},
+      },
+    });
+  }
+
+  keyboardAccessoryViewContent = () => {
+    const InnerContainerComponent = (IsIOS && BlurView) ? BlurView : View;
     return (
-      <SectionList
-      initialNumToRender={30}
-      inverted={true}
-      renderSectionFooter={({section})=>{
-        return (
-          <View style={styles.container}>
-            <Text style={styles.text2}>{section.title}</Text>
-          </View>
-        )
-      }}
-      contentContainerStyle={{padding: 8}}
-      contentInset={{top: -this.offset, left: 0, bottom: this.offset, right: 0}}
-      keyboardDismissMode='interactive'
-      sections={this.state.messagesInSections}
-      keyExtractor={item => item._id}
-      renderItem={({ item, index, section, separators }) => {
-        const me = item.user._id == this.firechat.userId? 'right': 'left'
-        return (
-          <React.Fragment>
-            <View style={[styles.bubble, styles[me]]}>
-              <Text style={styles.text}>{item.text}</Text>
-              <View style={{flexDirection: 'row', alignSelf: 'flex-end', alignItems: 'flex-end', height: 18, marginRight: me=="right"? 8: 0}}>
-                <Text style={styles.time}>{moment(item.createdAt).format("HH:mm")}</Text>
-                {me == "right" && <React.Fragment>
-                  {item.sent && <Icon name="ios-checkmark" size={14} color="#fff" />}
-                  {item.received && <Icon name="ios-checkmark" size={14} color="#fff" />}
-                </React.Fragment>}
-              </View>
-            </View>
-          </React.Fragment>
-        )
-      }} />
-    )
+      <InnerContainerComponent blurType="dark" style={styles.blurContainer}>
+        <View style={styles.inputContainer}>
+          <AutoGrowingTextInput
+            maxHeight={200}
+            style={styles.textInput}
+            ref={(r) => {
+              this.textInputRef = r;
+            }}
+            onChangeText={text => this.setState({text})}
+            value={this.state.text}
+            keyboardAppearance={'dark'}
+            placeholder={'Escreva uma msg..'}
+            underlineColorAndroid="transparent"
+            onFocus={() => this.resetKeyboardView()}
+            testID={'input'}
+          />
+          <TouchableOpacity style={styles.sendButton} onPress={() => this.onSend([{text: this.state.text}])}>
+            <Text style={{color: 'white'}}>Enviar</Text>
+          </TouchableOpacity>
+        </View>
+
+        <View style={{flexDirection: 'row'}}>
+          {
+            this.getToolbarButtons().map((button, index) => {
+              console.log(button)
+              return (
+                <TouchableOpacity onPress={button.onPress} style={{paddingLeft: 15, paddingBottom: 10}} key={index} testID={button.testID}>
+                  <Text style={{color:'white'}}>{button.text}</Text>
+                </TouchableOpacity>
+              )
+            })
+          }
+        </View>
+      </InnerContainerComponent>
+    );
   }
 
-  renderToolbar(){
-    const toolbar = (
-      <SafeAreaView style={{flexDirection: 'row', alignItems: 'center', borderTopColor: '#444', borderTopWidth: 0.5, backgroundColor: '#222'}}>
-        <TextInput
-          style={{flex: 1, color: 'white', paddingTop: 0, fontSize: 16, margin: 8}}
-          onChangeText={text => {
-            this.setState({text})
-          }}
-          keyboardAppearance={'dark'}
-          value={this.state.text}
-          placeholderTextColor='#444'
-          placeholder={'Escrever mensagem..'}
-          multiline={true}
-        />
-        <Button
-          color='#fc6157'
-          onPress={() => {
-            this.onSend([{text: this.state.text}])
-          }}
-          title="Enviar"
-        />
-      </SafeAreaView>
-    )
-    // if(Platform.OS == "ios"){
-    //   return (
-    //     <InputAccessoryView>
-    //       {toolbar}
-    //     </InputAccessoryView>
-    //   )
-    // }
-    return toolbar
-  }
 
   render() {
-    const chat = (
-      <React.Fragment>
-        {this.renderMessages()}
-        {this.renderToolbar()}
-      </React.Fragment>
+    return (
+      <View style={{flex: 1}}>
+        <SectionList
+          refreshControl={
+            <RefreshControl
+              refreshing={this.state.isLoadingEarlier}
+              onRefresh={this.onLoadEarlier}
+            />
+          }
+          contentInset={{top: this.offset}}
+          automaticallyAdjustContentInsets={true}
+          contentInsetAdjustmentBehavior='scrollableAxes'
+          keyboardDismissMode='interactive'
+          renderSectionHeader={({section})=>{
+            return (
+              <View style={styles.container}>
+                <Text style={styles.text2}>{section.title}</Text>
+              </View>
+            )
+          }}    
+          sections={this.state.messagesInSections}
+          keyExtractor={item => item._id}
+          renderItem={({ item, index, section, separators }) => {
+            const me = item.user._id == this.firechat.userId? 'right': 'left'
+            return (
+              <View style={[styles.bubble, styles[me]]}>
+                <Text style={styles.text}>{item.text}</Text>
+                <View style={{flexDirection: 'row', alignSelf: 'flex-end', alignItems: 'flex-end', height: 18, marginRight: me=="right"? 8: 0}}>
+                  <Text style={styles.time}>{moment(item.createdAt).format("HH:mm")}</Text>
+                  {me == "right" && <React.Fragment>
+                    {item.sent && <Icon name="ios-checkmark" size={14} color="#fff" />}
+                    {item.received && <Icon name="ios-checkmark" size={14} color="#fff" />}
+                  </React.Fragment>}
+                </View>
+              </View>
+            )
+          }} />
+
+      <KeyboardAccessoryView
+        renderContent={this.keyboardAccessoryViewContent}
+        // onHeightChanged={IsIOS ? height => this.setState({keyboardAccessoryViewHeight: height}) : undefined}
+        trackInteractive={true}
+        kbInputRef={this.textInputRef}
+        kbComponent={this.state.customKeyboard.component}
+        kbInitialProps={this.state.customKeyboard.initialProps}
+        onItemSelected={this.onKeyboardItemSelected}
+        onKeyboardResigned={this.onKeyboardResigned}
+        // revealKeyboardInteractive
+      />
+    </View>
     )
-    if(Platform.OS == "ios"){
-      return (
-        <KeyboardAvoidingView behavior={'padding'} style={{flex: 1}}>
-          {chat}
-        </KeyboardAvoidingView>
-      )
-    } else {
-      return (
-        <View style={{flex: 1}}>
-          {chat}
-        </View>
-      )
-    }
+
   }
 }
 
@@ -240,6 +308,13 @@ const styles = StyleSheet.create({
     margin: 8,
     fontSize: 16,
     lineHeight: 22,
+  },
+  container: {
+    width: 100,
+    borderRadius: 18,
+    backgroundColor: '#111',
+    alignSelf: 'center',
+    marginTop: 8
   },
   time: {
     color: 'white',
@@ -263,15 +338,41 @@ const styles = StyleSheet.create({
     maxWidth: 250,
     margin: 2,
   },
-  container: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 5,
-    marginBottom: 10,
-  },
   text2: {
     color: 'white',
     fontSize: 12,
     fontWeight: '600',
+    textAlign: 'center',
+    lineHeight: 28
+  },
+  inputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  blurContainer: {
+    ...Platform.select({
+      ios: {
+        flex: 1,
+      },
+    }),
+  },
+  textInput: {
+    flex: 1,
+    marginLeft: 10,
+    marginTop: 10,
+    marginBottom: 10,
+    paddingLeft: 10,
+    paddingTop: 2,
+    paddingBottom: 5,
+    fontSize: 16,
+    backgroundColor: '#666',
+    borderWidth: 0.5 / PixelRatio.get(),
+    borderRadius: 18,
+  },
+  sendButton: {
+    paddingRight: 15,
+    paddingLeft: 15,
+    alignSelf: 'center',
   },
 })

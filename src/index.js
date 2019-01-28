@@ -7,9 +7,10 @@ import Home from "./Home"
 import Messages from "./Messages"
 import Chat from "./Chat"
 import Profile from "./Profile"
+import Demo from "./demoScreen"
 import RightButton from "./RightButton"
 import { Platform } from 'react-native'
-import { goLogin, goHome } from './navigation'
+import { goLogin, goHome, goDemo } from './navigation'
 
 console.disableYellowBox = true
 
@@ -21,6 +22,7 @@ const rooms = (state = [], action) => {
 
 const store = createStore(combineReducers({rooms}))
 
+Navigation.registerComponentWithRedux('Demo', () => Demo, Provider, store)
 Navigation.registerComponentWithRedux('Login', () => Login, Provider, store)
 Navigation.registerComponentWithRedux('Home', () => Home, Provider, store)
 Navigation.registerComponentWithRedux('Messages', () => Messages, Provider, store)
@@ -29,7 +31,7 @@ Navigation.registerComponentWithRedux('Profile', () => Profile, Provider, store)
 Navigation.registerComponent('RightButton', () => RightButton)
 
 Navigation.events().registerAppLaunchedListener(() => {
-  new Firechat({ goLogin, goHome })
+  new Firechat({ goLogin, goHome, goDemo })
 
   let options = {
     topBar: {

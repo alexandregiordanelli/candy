@@ -20,7 +20,7 @@ export default class Firechat {
     this.db.settings({ timestampsInSnapshots: true })
     this.roomsRef = this.db.collection("rooms")
     this.usersRef = this.db.collection("users")
-    this.nMax = 300
+    this.nMax = 20
 
     this.firebase.auth().onAuthStateChanged(async user => {
       //store.dispatch({type: "AUTH_CHANGE", logged: !!user})
@@ -35,14 +35,17 @@ export default class Firechat {
         // else {//device
         //   this.userId = "NLXyeIMnS3QriEQ9vWH772Ltdn12" //molly
         // }
+        this.userId = "NLXyeIMnS3QriEQ9vWH772Ltdn12"
         await this.getUser()
         if(!this.user) 
           await this.createUser()
         await this.updatetUserLocation(-22.9690888, -43.2041239)
         action.goHome()
+        //action.goDemo()
       } else {
         this.userId = null
         action.goLogin()
+        //action.goHome()
       }
     })
 

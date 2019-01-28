@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.cmcewen.blurview.BlurViewPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
 import com.facebook.react.ReactNativeHost;
@@ -33,6 +34,7 @@ import com.reactnativenavigation.NavigationApplication;
 import com.reactnativenavigation.react.NavigationReactNativeHost;
 import com.reactnativenavigation.react.ReactGateway;
 
+import com.wix.reactnativekeyboardinput.KeyboardInputPackage;
 
 import java.util.Arrays;
 import java.util.List;
@@ -67,8 +69,8 @@ public class MainApplication extends NavigationApplication {
         new RNFirebaseNotificationsPackage(),
         new RNFirebasePerformancePackage(),
         new RNFirebaseStoragePackage(),
-        new VectorIconsPackage()
-
+        new VectorIconsPackage(),
+        new KeyboardInputPackage(this.getApplication())
       );
     }
 
@@ -99,7 +101,8 @@ public class MainApplication extends NavigationApplication {
       new RNFirebaseNotificationsPackage(),
       new RNFirebasePerformancePackage(),
       new RNFirebaseStoragePackage(),
-      new VectorIconsPackage()
+      new VectorIconsPackage(),
+      new KeyboardInputPackage(this)
     );
   }
 

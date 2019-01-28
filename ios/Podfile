@@ -28,4 +28,6 @@ target 'Candy' do
 
   pod 'GoogleAppMeasurement', '~> 5.3.0'
 
+  pod 'react-native-blur', :path => '../node_modules/react-native-blur'
+
 end

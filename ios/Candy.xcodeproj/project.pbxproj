@@ -40,6 +40,10 @@
 		8E7D4B171F8AFD9C00699FE4 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8E7D4B161F8AFD9B00699FE4 /* GoogleService-Info.plist */; };
 		A038CD85D39748E122AC50D7 /* libPods-Candy.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 333056BA5B7ADABE709DF4A1 /* libPods-Candy.a */; };
 		AC3A456821D3AF3F00A430A9 /* libRNDeviceInfo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AC3A456421D3AEF200A430A9 /* libRNDeviceInfo.a */; };
+		AC7C81C021FEBAEA0009D763 /* libRCTCustomInputController.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AC7C81BF21FEBACD0009D763 /* libRCTCustomInputController.a */; };
+		AC7C81C121FEBAF50009D763 /* libKeyboardTrackingView.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AC7C81B921FEBABF0009D763 /* libKeyboardTrackingView.a */; };
+		AC7C81C821FEBDAE0009D763 /* libAutoGrowTextInput.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AC7C81C721FEBDA30009D763 /* libAutoGrowTextInput.a */; };
+		AC7C81D221FEC3790009D763 /* libRNBlur.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AC7C81CF21FEC3690009D763 /* libRNBlur.a */; };
 		AC844BB721D223F000569446 /* libReactNativeNavigation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AC844BB421D223AA00569446 /* libReactNativeNavigation.a */; };
 		AC929A8D21ED539D00AAEEC8 /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AC929A5221ED539D00AAEEC8 /* Octicons.ttf */; };
 		AC929A8E21ED539D00AAEEC8 /* Feather.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AC929A5321ED539D00AAEEC8 /* Feather.ttf */; };
@@ -348,6 +352,41 @@
 			remoteGlobalIDString = E72EC1401F7ABB5A0001BC90;
 			remoteInfo = "RNDeviceInfo-tvOS";
 		};
+		AC7C81B821FEBABF0009D763 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = AC7C81B421FEBABF0009D763 /* KeyboardTrackingView.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D834CED81CC64F2400FA5668;
+			remoteInfo = KeyboardTrackingView;
+		};
+		AC7C81BE21FEBACD0009D763 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = AC7C81BA21FEBACC0009D763 /* RCTCustomInputController.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 39DF4FE71E00394E00F5B4B2;
+			remoteInfo = RCTCustomInputController;
+		};
+		AC7C81C621FEBDA30009D763 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = AC7C81C221FEBDA30009D763 /* AutoGrowTextInput.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D81C36501CDB667F00777FB9;
+			remoteInfo = AutoGrowTextInput;
+		};
+		AC7C81CE21FEC3690009D763 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = AC7C81C921FEC3680009D763 /* RNBlur.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = A68BD7BC1BC31318005F02DF;
+			remoteInfo = RNBlur;
+		};
+		AC7C81D021FEC3690009D763 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = AC7C81C921FEC3680009D763 /* RNBlur.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 64D1BD361EEFE88700F3F219;
+			remoteInfo = "RNBlur-tvOS";
+		};
 		AC844BB321D223AA00569446 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = AC844BAE21D223AA00569446 /* ReactNativeNavigation.xcodeproj */;
@@ -425,6 +464,10 @@
 		8D10466AB98C4BF98746032C /* FontAwesome5_Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Regular.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Regular.ttf"; sourceTree = "<group>"; };
 		8E7D4B161F8AFD9B00699FE4 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		AC3A453721D3AEF200A430A9 /* RNDeviceInfo.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNDeviceInfo.xcodeproj; path = "../node_modules/react-native-device-info/ios/RNDeviceInfo.xcodeproj"; sourceTree = "<group>"; };
+		AC7C81B421FEBABF0009D763 /* KeyboardTrackingView.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = KeyboardTrackingView.xcodeproj; path = "../node_modules/react-native-keyboard-tracking-view/lib/KeyboardTrackingView.xcodeproj"; sourceTree = "<group>"; };
+		AC7C81BA21FEBACC0009D763 /* RCTCustomInputController.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTCustomInputController.xcodeproj; path = "../node_modules/react-native-keyboard-input/lib/ios/RCTCustomInputController.xcodeproj"; sourceTree = "<group>"; };
+		AC7C81C221FEBDA30009D763 /* AutoGrowTextInput.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = AutoGrowTextInput.xcodeproj; path = "../node_modules/react-native-autogrow-textinput/ios/AutoGrowTextInput.xcodeproj"; sourceTree = "<group>"; };
+		AC7C81C921FEC3680009D763 /* RNBlur.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNBlur.xcodeproj; path = "../node_modules/react-native-blur/ios/RNBlur.xcodeproj"; sourceTree = "<group>"; };
 		AC844BAE21D223AA00569446 /* ReactNativeNavigation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ReactNativeNavigation.xcodeproj; path = "../node_modules/react-native-navigation/lib/ios/ReactNativeNavigation.xcodeproj"; sourceTree = "<group>"; };
 		AC929A5221ED539D00AAEEC8 /* Octicons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Octicons.ttf; sourceTree = "<group>"; };
 		AC929A5321ED539D00AAEEC8 /* Feather.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Feather.ttf; sourceTree = "<group>"; };
@@ -465,6 +508,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AC7C81D221FEC3790009D763 /* libRNBlur.a in Frameworks */,
+				AC7C81C821FEBDAE0009D763 /* libAutoGrowTextInput.a in Frameworks */,
+				AC7C81C121FEBAF50009D763 /* libKeyboardTrackingView.a in Frameworks */,
+				AC7C81C021FEBAEA0009D763 /* libRCTCustomInputController.a in Frameworks */,
 				AC984D2521D5EE4300F1CEB3 /* libRNVectorIcons.a in Frameworks */,
 				AC3A456821D3AF3F00A430A9 /* libRNDeviceInfo.a in Frameworks */,
 				AC844BB721D223F000569446 /* libReactNativeNavigation.a in Frameworks */,
@@ -656,6 +703,10 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				AC7C81C921FEC3680009D763 /* RNBlur.xcodeproj */,
+				AC7C81C221FEBDA30009D763 /* AutoGrowTextInput.xcodeproj */,
+				AC7C81BA21FEBACC0009D763 /* RCTCustomInputController.xcodeproj */,
+				AC7C81B421FEBABF0009D763 /* KeyboardTrackingView.xcodeproj */,
 				AC984CF221D5EE0800F1CEB3 /* RNVectorIcons.xcodeproj */,
 				AC3A453721D3AEF200A430A9 /* RNDeviceInfo.xcodeproj */,
 				AC844BAE21D223AA00569446 /* ReactNativeNavigation.xcodeproj */,
@@ -744,6 +795,39 @@
 			children = (
 				AC3A456421D3AEF200A430A9 /* libRNDeviceInfo.a */,
 				AC3A456621D3AEF200A430A9 /* libRNDeviceInfo-tvOS.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		AC7C81B521FEBABF0009D763 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				AC7C81B921FEBABF0009D763 /* libKeyboardTrackingView.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		AC7C81BB21FEBACC0009D763 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				AC7C81BF21FEBACD0009D763 /* libRCTCustomInputController.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		AC7C81C321FEBDA30009D763 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				AC7C81C721FEBDA30009D763 /* libAutoGrowTextInput.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		AC7C81CA21FEC3680009D763 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				AC7C81CF21FEC3690009D763 /* libRNBlur.a */,
+				AC7C81D121FEC3690009D763 /* libRNBlur.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -943,6 +1027,14 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
+					ProductGroup = AC7C81C321FEBDA30009D763 /* Products */;
+					ProjectRef = AC7C81C221FEBDA30009D763 /* AutoGrowTextInput.xcodeproj */;
+				},
+				{
+					ProductGroup = AC7C81B521FEBABF0009D763 /* Products */;
+					ProjectRef = AC7C81B421FEBABF0009D763 /* KeyboardTrackingView.xcodeproj */;
+				},
+				{
 					ProductGroup = 00C302A81ABCB8CE00DB3ED1 /* Products */;
 					ProjectRef = 00C302A71ABCB8CE00DB3ED1 /* RCTActionSheet.xcodeproj */;
 				},
@@ -953,6 +1045,10 @@
 				{
 					ProductGroup = ADBDB9201DFEBF0600ED6528 /* Products */;
 					ProjectRef = ADBDB91F1DFEBF0600ED6528 /* RCTBlob.xcodeproj */;
+				},
+				{
+					ProductGroup = AC7C81BB21FEBACC0009D763 /* Products */;
+					ProjectRef = AC7C81BA21FEBACC0009D763 /* RCTCustomInputController.xcodeproj */;
 				},
 				{
 					ProductGroup = 00C302B61ABCB90400DB3ED1 /* Products */;
@@ -993,6 +1089,10 @@
 				{
 					ProductGroup = AC844BAF21D223AA00569446 /* Products */;
 					ProjectRef = AC844BAE21D223AA00569446 /* ReactNativeNavigation.xcodeproj */;
+				},
+				{
+					ProductGroup = AC7C81CA21FEC3680009D763 /* Products */;
+					ProjectRef = AC7C81C921FEC3680009D763 /* RNBlur.xcodeproj */;
 				},
 				{
 					ProductGroup = AC3A453821D3AEF200A430A9 /* Products */;
@@ -1289,6 +1389,41 @@
 			fileType = archive.ar;
 			path = "libRNDeviceInfo-tvOS.a";
 			remoteRef = AC3A456521D3AEF200A430A9 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		AC7C81B921FEBABF0009D763 /* libKeyboardTrackingView.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libKeyboardTrackingView.a;
+			remoteRef = AC7C81B821FEBABF0009D763 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		AC7C81BF21FEBACD0009D763 /* libRCTCustomInputController.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRCTCustomInputController.a;
+			remoteRef = AC7C81BE21FEBACD0009D763 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		AC7C81C721FEBDA30009D763 /* libAutoGrowTextInput.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libAutoGrowTextInput.a;
+			remoteRef = AC7C81C621FEBDA30009D763 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		AC7C81CF21FEC3690009D763 /* libRNBlur.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNBlur.a;
+			remoteRef = AC7C81CE21FEC3690009D763 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		AC7C81D121FEC3690009D763 /* libRNBlur.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNBlur.a;
+			remoteRef = AC7C81D021FEC3690009D763 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		AC844BB421D223AA00569446 /* libReactNativeNavigation.a */ = {

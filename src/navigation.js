@@ -14,6 +14,19 @@ export const goLogin = () => Navigation.setRoot({
   }
 })
 
+export const goDemo = () => Navigation.setRoot({
+  root: {
+    stack: {
+        id: 'DemoRoot',
+        children: [{
+          component: {
+            name: 'Demo',
+          },
+        }]
+      }
+  }
+})
+
 export const goHome = async () => Navigation.setRoot({
   root: {
     bottomTabs: {
