@@ -35,6 +35,7 @@ Navigation.events().registerAppLaunchedListener(() => {
 
   let options = {
     topBar: {
+      visible: true,
       title: {
         color: 'white',
       },
