@@ -58,7 +58,7 @@ export default class extends Component {
           placeholderTextColor='#444'
           value={this.state.codeInput}
         />
-        <Button title="Entrar" color="#fc6157" onPress={()=>{
+        <Button title="Continuar" color="#fc6157" onPress={()=>{
           this.state.confirmResult.confirm(this.state.codeInput).then(() => {
               this.setState({ message: 'Código confirmado! Aguarde..' })
           }).catch(error => {

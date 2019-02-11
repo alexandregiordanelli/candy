@@ -1,35 +1,12 @@
-import React, {Component} from 'react';
-import PropTypes from 'prop-types';
+import React, {Component} from 'react'
 import {Text, TouchableOpacity, ScrollView, StyleSheet} from 'react-native';
 import {KeyboardRegistry} from 'react-native-keyboard-input';
 
-class KeyboardView extends Component {
-  static propTypes = {
-    title: PropTypes.string,
-  };
+
+class Payment extends Component {
 
   onButtonPress() {
-    KeyboardRegistry.onItemSelected('KeyboardView', {
-      message: 'item selected from KeyboardView',
-    });
-  }
-
-  render() {
-    return (
-      <ScrollView contentContainerStyle={[styles.keyboardContainer, {backgroundColor: 'none'}]}>
-
-      </ScrollView>
-    );
-  }
-}
-
-class AnotherKeyboardView extends Component {
-  static propTypes = {
-    title: PropTypes.string,
-  };
-
-  onButtonPress() {
-    KeyboardRegistry.toggleExpandedKeyboard('AnotherKeyboardView');
+    KeyboardRegistry.toggleExpandedKeyboard('Payment');
   }
 
   render() {
@@ -61,5 +38,4 @@ const styles = StyleSheet.create({
   },
 });
 
-KeyboardRegistry.registerKeyboard('KeyboardView', () => KeyboardView);
-KeyboardRegistry.registerKeyboard('AnotherKeyboardView', () => AnotherKeyboardView);
+KeyboardRegistry.registerKeyboard('Payment', () => Payment);

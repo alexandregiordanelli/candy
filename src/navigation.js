@@ -14,19 +14,6 @@ export const goLogin = () => Navigation.setRoot({
   }
 })
 
-export const goDemo = () => Navigation.setRoot({
-  root: {
-    stack: {
-        id: 'DemoRoot',
-        children: [{
-          component: {
-            name: 'Demo',
-          },
-        }]
-      }
-  }
-})
-
 export const goHome = async () => Navigation.setRoot({
   root: {
     bottomTabs: {
@@ -70,6 +57,91 @@ export const goHome = async () => Navigation.setRoot({
                 }
               },
             }]
+          }
+        },
+        {
+          stack: {
+            children: [{
+              component: {
+                name: 'Payments',
+                options: {
+                  topBar: {
+                    title: {
+                      text: 'Pagamentos',
+                    },
+                  },
+                  bottomTab: {
+                    icon: await Icon.getImageSource('credit-card', 20),
+                    text: "Pagamentos",
+                  },
+                }
+              },
+            }],
+          }
+        },
+        {
+          stack: {
+            children: [{
+              component: {
+                name: 'Profile',
+                options: {
+                  bottomTab: {
+                    icon: await Icon.getImageSource('user', 20),
+                    text: "Perfil",
+                  },
+                }
+              },
+            }],
+          }
+        }
+      ],
+    }
+  }
+})
+
+export const goHomeForCandies = async () => Navigation.setRoot({
+  root: {
+    bottomTabs: {
+      id: 'HomeRoot2',
+      children: [
+        {
+          stack: {
+            children: [{
+              component: {
+                name: 'Messages',
+                options: {
+                  topBar: {
+                    title: {
+                      text: 'Mensagens',
+                    },
+                  },
+                  bottomTab: {
+                    icon: await Icon.getImageSource('bubbles', 20),
+                    text: "Mensagens",
+                  },
+                }
+              },
+            }]
+          }
+        },
+        {
+          stack: {
+            children: [{
+              component: {
+                name: 'Payments',
+                options: {
+                  topBar: {
+                    title: {
+                      text: 'Pagamentos',
+                    },
+                  },
+                  bottomTab: {
+                    icon: await Icon.getImageSource('credit-card', 20),
+                    text: "Pagamentos",
+                  },
+                }
+              },
+            }],
           }
         },
         {

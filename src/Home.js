@@ -20,6 +20,24 @@ export default class extends React.Component {
   }
 
   componentDidMount() {
+
+    Navigation.showModal({
+      stack: {
+        children: [{
+          component: {
+            name: 'CreditCard',
+            options: {
+              topBar: {
+                title: {
+                  text: 'Cartão de Crédito'
+                }
+              }
+            }
+          }
+        }]
+      }
+    })
+
     this.firechat.getUsersNearby(400).then(users => this.setState({users}))
     //this.createFakeUsers()
   }
@@ -199,7 +217,7 @@ export default class extends React.Component {
   }
 
   makeRemoteRequest = async point => {
-    const res = await fetch('https://randomuser.me/api/?nat=br').then(res => res.json())
+    const res = await fetch('https://randomuser.me/api/?nat=br&gender=female').then(res => res.json())
     const avatar = res.results[0].picture.large
     const name = res.results[0].name.first + " " + res.results[0].name.last
     const latitude = point[0]
@@ -240,7 +258,7 @@ export default class extends React.Component {
             <Navigation.Element elementId={item.id}>
               <Image resizeMode='cover' style={{flex:1, aspectRatio: 1}} source={{uri: item.avatar}} blurRadius={0}/>
             </Navigation.Element>
-            <Text style={{color: "#fff", backgroundColor: 'rgba(0,0,0,0.4)', fontSize: 11, position: 'absolute', right: 0, bottom:0}}>{item.distance} m</Text>
+            <Text style={{color: "#fff", backgroundColor: 'rgba(0,0,0,0.4)', fontSize: 11, position: 'absolute', right: 0, bottom:0}}>{item.distance} km</Text>
           </TouchableOpacity>
           )} 
       />

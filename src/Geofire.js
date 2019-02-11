@@ -171,7 +171,7 @@ const getDocumentsNearby = (ref, center, radius) => {
         promises.push(query.get().then(querySnapshot => {
             querySnapshot.forEach(doc => {
                 let data = doc.data()
-                data.distance = Math.round(1000 * distance(center, [data.location.latitude,data.location.longitude]))
+                data.distance = Math.round(distance(center, [data.location.latitude,data.location.longitude]) * 100) / 100
                 data.id = doc.id
                 if(data.distance < radius)
                     docs.push(data)

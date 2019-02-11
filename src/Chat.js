@@ -1,25 +1,14 @@
 import React from 'react'
-import { Navigation } from "react-native-navigation"
 import Firechat from './Firechat'
 import {
   Text,
   SectionList,
-  FlatList,
   View,
-  TextInput,
-  InputAccessoryView,
-  Button,
   StyleSheet,
-  KeyboardAvoidingView,
   Platform,
-  Image,
-  SafeAreaView,
-  ScrollView,
   TouchableOpacity,
   PixelRatio,
-  NativeModules,
   Dimensions,
-  RefreshControl
 } from 'react-native'
 import Icon from "react-native-vector-icons/Ionicons"
 
@@ -33,8 +22,6 @@ import {KeyboardAccessoryView, KeyboardUtils} from 'react-native-keyboard-input'
 import './demoKeyboards';
 
 const IsIOS = Platform.OS === 'ios';
-const TrackInteractive = true
-const screenSize = Dimensions.get('window')
 
 export default class extends React.Component {
   
@@ -98,16 +85,18 @@ export default class extends React.Component {
 
   subscribe = roomId => {
     this.unsubscribe = this.firechat.getOnMessages(roomId, ({messages, cursor}) => {
-      const newMessages = this.removeDuplicates(messages.concat(this.state.messages), "_id").sort((a,b)=>a.createdAt - b.createdAt)
-      this.storeMessages(newMessages, cursor)
+      const newMessages = this.removeDuplicates(messages.concat(this.state.messages), "_id").sort((a,b)=>b.createdAt - a.createdAt)
+      this.storeMessages(newMessages, cursor).then(()=>{
+
+      })
     }) 
   }
 
   onLoadEarlier = () => {
     this.setState({isLoadingEarlier: true }) 
     this.firechat.getMessages(this.roomId, this.cursor).then(({messages, cursor}) => {
-      const newMessages = this.removeDuplicates(messages.concat(this.state.messages), "_id").sort((a,b)=>a.createdAt - b.createdAt)
-      this.storeMessages(newMessages, cursor)
+      const newMessages = this.removeDuplicates(messages.concat(this.state.messages), "_id").sort((a,b)=>b.createdAt - a.createdAt)
+      this.storeMessages(newMessages, cursor)   
     })
   }
 
@@ -140,11 +129,11 @@ export default class extends React.Component {
     return sectionListData
   }
 
-  storeMessages = (messages, cursor) => {
+  storeMessages = async (messages, cursor) => {
     let loadEarlier = false
     if(cursor)
       loadEarlier = true
-    this.setState({
+    await this.setState({
       messages: messages,
       messagesInSections: this.splitToSections(messages),
       loadEarlier,
@@ -165,25 +154,16 @@ export default class extends React.Component {
     }
 
     this.firechat.createMessages(this.roomId, messages)
-    KeyboardUtils.dismiss()
+    //this.refs.flatList1.scrollToEnd({ animated: true })
+    //KeyboardUtils.dismiss()
   }
  
   getToolbarButtons = () => {
     return [
       {
-        text: 'show1',
-        testID: 'show1',
-        onPress: () => this.showKeyboardView('KeyboardView', 'FIRST - 1 (passed prop)'),
-      },
-      {
-        text: 'show2',
+        text: 'Fazer pagamento',
         testID: 'show2',
-        onPress: () => this.showKeyboardView('AnotherKeyboardView', 'SECOND - 2 (passed prop)'),
-      },
-      {
-        text: 'reset',
-        testID: 'reset',
-        onPress: () => this.resetKeyboardView(),
+        onPress: () => this.showKeyboardView('Payment', 'SECOND - 2 (passed prop)'),
       },
     ];
   }
@@ -232,7 +212,6 @@ export default class extends React.Component {
         <View style={{flexDirection: 'row'}}>
           {
             this.getToolbarButtons().map((button, index) => {
-              console.log(button)
               return (
                 <TouchableOpacity onPress={button.onPress} style={{paddingLeft: 15, paddingBottom: 10}} key={index} testID={button.testID}>
                   <Text style={{color:'white'}}>{button.text}</Text>
@@ -245,22 +224,15 @@ export default class extends React.Component {
     );
   }
 
-
   render() {
     return (
-      <View style={{flex: 1}}>
+      <React.Fragment>
         <SectionList
-          refreshControl={
-            <RefreshControl
-              refreshing={this.state.isLoadingEarlier}
-              onRefresh={this.onLoadEarlier}
-            />
-          }
-          contentInset={{top: this.offset}}
-          automaticallyAdjustContentInsets={true}
-          contentInsetAdjustmentBehavior='scrollableAxes'
+          inverted={true}
+          onEndReached={this.onLoadEarlier}
+          contentInset={{bottom: this.offset}}
           keyboardDismissMode='interactive'
-          renderSectionHeader={({section})=>{
+          renderSectionFooter={({section})=>{
             return (
               <View style={styles.container}>
                 <Text style={styles.text2}>{section.title}</Text>
@@ -287,16 +259,17 @@ export default class extends React.Component {
 
       <KeyboardAccessoryView
         renderContent={this.keyboardAccessoryViewContent}
-        // onHeightChanged={IsIOS ? height => this.setState({keyboardAccessoryViewHeight: height}) : undefined}
         trackInteractive={true}
         kbInputRef={this.textInputRef}
         kbComponent={this.state.customKeyboard.component}
         kbInitialProps={this.state.customKeyboard.initialProps}
         onItemSelected={this.onKeyboardItemSelected}
         onKeyboardResigned={this.onKeyboardResigned}
-        // revealKeyboardInteractive
+        requiresSameParentToManageScrollView={true}
+        scrollIsInverted={true}
+        revealKeyboardInteractive={false}
       />
-    </View>
+      </React.Fragment>
     )
 
   }

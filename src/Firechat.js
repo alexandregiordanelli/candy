@@ -1,15 +1,14 @@
 import firebase from 'react-native-firebase'
-//import DeviceInfo from 'react-native-device-info'
+import DeviceInfo from 'react-native-device-info'
 //import { Platform } from 'react-native'
 import { getDocumentsNearby, encodeGeohash } from './Geofire'
 
-//const isEmulator = DeviceInfo.isEmulator()
+const isEmulator = DeviceInfo.isEmulator()
+const model = DeviceInfo.getModel()
 
 export default class Firechat {
 
   static instance
-
-  logged = false
 
   constructor(action) {
     if(Firechat.instance)
@@ -20,32 +19,40 @@ export default class Firechat {
     this.db.settings({ timestampsInSnapshots: true })
     this.roomsRef = this.db.collection("rooms")
     this.usersRef = this.db.collection("users")
-    this.nMax = 20
+    this.nMax = 40
+    this.page = "open"
 
     this.firebase.auth().onAuthStateChanged(async user => {
-      //store.dispatch({type: "AUTH_CHANGE", logged: !!user})
       if(user){
         this.userId = user.uid
-        // if(isEmulator){
-        //   if(Platform.OS == "ios")
-        //     this.userId = "ua2ezI5QJceHg5XhX17kiJvEY132" //alicia 
-        //   else  //android
-        //     this.userId = "Zpnu7UOiola1egCMSk3D" // 
-        // } 
-        // else {//device
-        //   this.userId = "NLXyeIMnS3QriEQ9vWH772Ltdn12" //molly
-        // }
         this.userId = "NLXyeIMnS3QriEQ9vWH772Ltdn12"
+
+        if(isEmulator){
+          if(model == "iPhone 6")
+            this.userId = "1zbTrIwKtwfsSTkqj3rV" //diná lopes
+          else if(model == "iPhone 7")
+            this.userId = "21XthwDngB0fnVCKigBl" //gonçala silveira
+          else if(model == "iPhone 5s")
+            this.userId = "3NoshWHsGYdHuoHqoNPK" //cida costa
+        }
+        
         await this.getUser()
         if(!this.user) 
           await this.createUser()
         await this.updatetUserLocation(-22.9690888, -43.2041239)
-        action.goHome()
-        //action.goDemo()
+        if(this.page == "login" || this.page == "open"){
+          this.page = "home"
+          if(this.user.candie)
+            action.goHomeForCandies()
+          else
+            action.goHome()
+        }
       } else {
+        if(this.page == "home" || this.page == "open"){
+          this.page = "login"
+          action.goLogin()
+        }
         this.userId = null
-        action.goLogin()
-        //action.goHome()
       }
     })
 
@@ -56,12 +63,12 @@ export default class Firechat {
     this.firebase.auth().signOut()
   }
 
-
   async createFakeUser(name, avatar, latitude, longitude){
     const location = new firebase.firestore.GeoPoint(latitude, longitude)
     await this.usersRef.add({
       name,
       fake: true,
+      candie: true,
       avatar,
       geohash: encodeGeohash([location.latitude, location.longitude]),
       location
@@ -251,7 +258,7 @@ export default class Firechat {
   }
 
   async getUsersNearby(radius){
-    return await getDocumentsNearby(this.usersRef, [this.user.location.latitude, this.user.location.longitude], radius)
+    return await getDocumentsNearby(this.usersRef.where("fake","==",true), [this.user.location.latitude, this.user.location.longitude], radius)
   }
 
   async updatetUserLocation(latitude, longitude){
