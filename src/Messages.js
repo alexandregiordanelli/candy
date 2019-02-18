@@ -5,9 +5,13 @@ import MessageItem from './MessageItem'
 import Firechat from './Firechat'
 import { Navigation } from "react-native-navigation"
 
-@connect(state => ({rooms: state.rooms}))
+//@connect(state => ({rooms: state.rooms}))
 export default class extends React.Component {
   
+  state =  {
+    rooms: []
+  }
+
   firechat = new Firechat
 
   componentWillMount(){ 
@@ -22,7 +26,8 @@ export default class extends React.Component {
           badgeColor: '#fc6157'
         }
       })
-      this.props.dispatch({type: "ADD_ROOMS", rooms})
+      this.setState({rooms})
+      //this.props.dispatch({type: "ADD_ROOMS", rooms})
     })
   }
   
@@ -33,7 +38,7 @@ export default class extends React.Component {
   render() {
     return (
       <FlatList 
-      data={this.props.rooms} 
+      data={this.state.rooms} 
       keyExtractor={item => item.id} 
       renderItem={({ item }) => (
         <MessageItem componentId={this.props.componentId} room={item} userId={this.firechat.userId} />

@@ -7,6 +7,49 @@ import {
   TouchableOpacity
 } from 'react-native'
 import Firechat from './Firechat'
+import { InstantSearch } from 'react-instantsearch-native'
+import { connectInfiniteHits, Configure } from 'react-instantsearch-native'
+
+const Hits = connectInfiniteHits(({ hits, hasMore, refine, componentId }) => {
+
+  const onEndReached = () => {
+    if (hasMore)
+      refine()
+  }
+
+  return (
+    <FlatList onEndReached={onEndReached} onEndThreshold={0} contentContainerStyle={{paddingRight: 1}} data={hits} numColumns={2} keyExtractor={item => item.objectID} renderItem={({ item }) => (
+      <TouchableOpacity style={{flex: 1, marginLeft: 1, marginBottom: 1}} onPress={()=>{
+        Navigation.push(componentId, { 
+          component: { 
+            name: 'Profile',
+            passProps: {
+              user: item
+            },
+            options: {
+              customTransition: {
+                animations: [
+                  { type: 'sharedElement', fromId: item.objectID, toId: 'cover', startDelay: 0, springVelocity: 0.2, duration: 0.2 }
+                ],
+                duration: 0.2
+              },
+              bottomTabs: { 
+                visible: false,
+                drawBehind: true
+              },
+            }
+          }
+        })
+      }}>
+        <Navigation.Element elementId={item.objectID}>
+          <Image resizeMode='stretch' style={{flex:1, aspectRatio: 1}} source={{uri: item.avatar}} blurRadius={0}/>
+        </Navigation.Element>
+        <Text style={{color: "#fff", backgroundColor: 'rgba(0,0,0,0.4)', fontSize: 11, position: 'absolute', right: 0, bottom:0}}>{item._rankingInfo.geoDistance/1000} km</Text>
+      </TouchableOpacity>
+      )} 
+    />
+  )
+})
 
 export default class extends React.Component {
 
@@ -38,230 +81,20 @@ export default class extends React.Component {
       }
     })
 
-    this.firechat.getUsersNearby(400).then(users => this.setState({users}))
-    //this.createFakeUsers()
   }
 
-  createFakeUsers = async () => {
-    const points = [[-43.20429,-22.969],
-    [-43.20432,-22.96898],
-    [-43.20444,-22.96892],
-    [-43.20452,-22.96887],
-    [-43.20459,-22.96882],
-    [-43.20476,-22.96869],
-    [-43.20471,-22.96864],
-    [-43.2046,-22.96852],
-    [-43.2043,-22.96823],
-    [-43.20396,-22.96787],
-    [-43.20379,-22.96769],
-    [-43.20367,-22.96756],
-    [-43.20359,-22.96746],
-    [-43.20353,-22.96736],
-    [-43.20351,-22.96733],
-    [-43.20349,-22.96732],
-    [-43.20345,-22.96731],
-    [-43.20342,-22.96729],
-    [-43.20339,-22.96727],
-    [-43.20337,-22.96725],
-    [-43.2033,-22.96718],
-    [-43.20336,-22.96713],
-    [-43.20334,-22.9671],
-    [-43.20298,-22.96674],
-    [-43.20294,-22.96671],
-    [-43.20288,-22.96664],
-    [-43.20258,-22.96633],
-    [-43.20254,-22.96629],
-    [-43.20258,-22.96622],
-    [-43.20267,-22.96574],
-    [-43.20273,-22.96516],
-    [-43.20274,-22.96509],
-    [-43.20275,-22.96501],
-    [-43.20279,-22.96471],
-    [-43.20279,-22.96465],
-    [-43.2028,-22.96457],
-    [-43.20281,-22.96452],
-    [-43.20282,-22.96445],
-    [-43.20285,-22.96415],
-    [-43.20286,-22.96412],
-    [-43.20278,-22.9641],
-    [-43.20279,-22.96407],
-    [-43.20281,-22.96395],
-    [-43.20288,-22.96338],
-    [-43.20289,-22.96324],
-    [-43.203,-22.96243],
-    [-43.20301,-22.96238],
-    [-43.20303,-22.9623],
-    [-43.20308,-22.96183],
-    [-43.20307,-22.96173],
-    [-43.20306,-22.96146],
-    [-43.20314,-22.96146],
-    [-43.20313,-22.96139],
-    [-43.20312,-22.9611],
-    [-43.20312,-22.96103],
-    [-43.20314,-22.96087],
-    [-43.20314,-22.96075],
-    [-43.20314,-22.96073],
-    [-43.20314,-22.96068],
-    [-43.20305,-22.96068],
-    [-43.20299,-22.96063],
-    [-43.20294,-22.96057],
-    [-43.20288,-22.96049],
-    [-43.20285,-22.96045],
-    [-43.20284,-22.96041],
-    [-43.20282,-22.96038],
-    [-43.20279,-22.96035],
-    [-43.20276,-22.96033],
-    [-43.2027,-22.9603],
-    [-43.20262,-22.96026],
-    [-43.20257,-22.96024],
-    [-43.20254,-22.96023],
-    [-43.20253,-22.96022],
-    [-43.20253,-22.96021],
-    [-43.20253,-22.96019],
-    [-43.20255,-22.96009],
-    [-43.20256,-22.96007],
-    [-43.20254,-22.96006],
-    [-43.20253,-22.96005],
-    [-43.20251,-22.96004],
-    [-43.20237,-22.95997],
-    [-43.20226,-22.95991],
-    [-43.20212,-22.95984],
-    [-43.20186,-22.95972],
-    [-43.20126,-22.95944],
-    [-43.20094,-22.95929],
-    [-43.20081,-22.95922],
-    [-43.20084,-22.95917],
-    [-43.20088,-22.95909],
-    [-43.20026,-22.95876],
-    [-43.20025,-22.95876],
-    [-43.20018,-22.95872],
-    [-43.20014,-22.95869],
-    [-43.20008,-22.95864],
-    [-43.20003,-22.95859],
-    [-43.19997,-22.95852],
-    [-43.19995,-22.95849],
-    [-43.19992,-22.95846],
-    [-43.19971,-22.95815],
-    [-43.19967,-22.95809],
-    [-43.19954,-22.95791],
-    [-43.19939,-22.9577],
-    [-43.19935,-22.95764],
-    [-43.19931,-22.95759],
-    [-43.19926,-22.95751],
-    [-43.19924,-22.95749],
-    [-43.19919,-22.95741],
-    [-43.19908,-22.95723],
-    [-43.19903,-22.95717],
-    [-43.19878,-22.95681],
-    [-43.19873,-22.95675],
-    [-43.19871,-22.95672],
-    [-43.19861,-22.95652],
-    [-43.19857,-22.95646],
-    [-43.19853,-22.95638],
-    [-43.19846,-22.95623],
-    [-43.19838,-22.95606],
-    [-43.19831,-22.95591],
-    [-43.19828,-22.95585],
-    [-43.19825,-22.9558],
-    [-43.19813,-22.9556],
-    [-43.19812,-22.95557],
-    [-43.19813,-22.95554],
-    [-43.19812,-22.95553],
-    [-43.19809,-22.95548],
-    [-43.19805,-22.95539],
-    [-43.19799,-22.95529],
-    [-43.19792,-22.95519],
-    [-43.19788,-22.95513],
-    [-43.19782,-22.95504],
-    [-43.19777,-22.95498],
-    [-43.19773,-22.95491],
-    [-43.19757,-22.95469],
-    [-43.19752,-22.95463],
-    [-43.19749,-22.95458],
-    [-43.19747,-22.95456],
-    [-43.19738,-22.95441],
-    [-43.19733,-22.95433],
-    [-43.19716,-22.95398],
-    [-43.19713,-22.95392],
-    [-43.19703,-22.95372],
-    [-43.19699,-22.95366],
-    [-43.19696,-22.9536],
-    [-43.19693,-22.95354],
-    [-43.19685,-22.95337],
-    [-43.19678,-22.95323],
-    [-43.19667,-22.95302],
-    [-43.19656,-22.95281],
-    [-43.19654,-22.95278],
-    [-43.19648,-22.95267],
-    [-43.19643,-22.95261],
-    [-43.1964,-22.95257],
-    [-43.19635,-22.95251],
-    [-43.19641,-22.95247],
-    [-43.1967,-22.95225],
-    [-43.19699,-22.95202],
-    [-43.19725,-22.95182],
-    [-43.19733,-22.95175],
-    [-43.19756,-22.95158]]
-
-    let users = []
-    for(const point of points){
-      users.push(await this.makeRemoteRequest(point.reverse()))          
-    }
-    const promises = []
-    for(const user of users){
-      promises.push(this.firechat.createFakeUser(user.name, user.avatar, user.latitude, user.longitude))
-    }
-    Promise.all(promises).then(()=> {
-      console.log("criados")
-    })
-  }
-
-  makeRemoteRequest = async point => {
-    const res = await fetch('https://randomuser.me/api/?nat=br&gender=female').then(res => res.json())
-    const avatar = res.results[0].picture.large
-    const name = res.results[0].name.first + " " + res.results[0].name.last
-    const latitude = point[0]
-    const longitude = point[1]
-    return {
-      avatar,
-      name, 
-      latitude,
-      longitude
-    }
-  }
+  
 
   render() {
     return ( 
-      <FlatList contentContainerStyle={{paddingRight: 1}} data={this.state.users} numColumns={4} keyExtractor={item => item.id} renderItem={({ item }) => (
-          <TouchableOpacity style={{flex: 1, marginLeft: 1, marginBottom: 1}} onPress={()=>{
-            Navigation.push(this.props.componentId, { 
-              component: { 
-                name: 'Profile',
-                passProps: {
-                  user: item
-                },
-                options: {
-                  customTransition: {
-                    animations: [
-                      { type: 'sharedElement', fromId: item.id, toId: 'cover', startDelay: 0, springVelocity: 0.2, duration: 0.2 }
-                    ],
-                    duration: 0.3
-                  },
-                  bottomTabs: { 
-                    visible: false,
-                    drawBehind: true
-                  },
-                }
-              }
-            })
-          }}>
-            <Navigation.Element elementId={item.id}>
-              <Image resizeMode='cover' style={{flex:1, aspectRatio: 1}} source={{uri: item.avatar}} blurRadius={0}/>
-            </Navigation.Element>
-            <Text style={{color: "#fff", backgroundColor: 'rgba(0,0,0,0.4)', fontSize: 11, position: 'absolute', right: 0, bottom:0}}>{item.distance} km</Text>
-          </TouchableOpacity>
-          )} 
-      />
+      <InstantSearch
+          appId="GVVG7LEMK4"
+          apiKey="c769132b1de05084bcf0efef5b7cd92d"
+          indexName="customers"
+        >
+        <Configure aroundLatLngViaIP={true} getRankingInfo={true}/>
+        <Hits componentId={this.props.componentId}/>
+      </InstantSearch>
     )
   }
 }

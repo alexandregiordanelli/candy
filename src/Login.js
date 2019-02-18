@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import { View, Button, Text, TextInput, StyleSheet, KeyboardAvoidingView } from 'react-native'
 import firebase from 'react-native-firebase'
 
+firebase.auth().settings.appVerificationDisabledForTesting = true
+
 export default class extends Component {
   static get options() {
     return {

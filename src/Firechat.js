@@ -1,8 +1,8 @@
 import firebase from 'react-native-firebase'
 import DeviceInfo from 'react-native-device-info'
-//import { Platform } from 'react-native'
-import { getDocumentsNearby, encodeGeohash } from './Geofire'
-
+import algoliasearch from 'algoliasearch'
+const client = algoliasearch('GVVG7LEMK4', 'c769132b1de05084bcf0efef5b7cd92d')
+const index = client.initIndex('customers')
 const isEmulator = DeviceInfo.isEmulator()
 const model = DeviceInfo.getModel()
 
@@ -23,23 +23,23 @@ export default class Firechat {
     this.page = "open"
 
     this.firebase.auth().onAuthStateChanged(async user => {
+      
       if(user){
         this.userId = user.uid
-        this.userId = "NLXyeIMnS3QriEQ9vWH772Ltdn12"
+        this.userId = "5521992527291"
 
         if(isEmulator){
           if(model == "iPhone 6")
-            this.userId = "1zbTrIwKtwfsSTkqj3rV" //diná lopes
+            this.userId = "5521996180248" 
           else if(model == "iPhone 7")
-            this.userId = "21XthwDngB0fnVCKigBl" //gonçala silveira
+            this.userId = "21XthwDngB0fnVCKigBl" 
           else if(model == "iPhone 5s")
-            this.userId = "3NoshWHsGYdHuoHqoNPK" //cida costa
+            this.userId = "5521992527291" 
         }
-        
+
         await this.getUser()
         if(!this.user) 
           await this.createUser()
-        await this.updatetUserLocation(-22.9690888, -43.2041239)
         if(this.page == "login" || this.page == "open"){
           this.page = "home"
           if(this.user.candie)
@@ -63,49 +63,22 @@ export default class Firechat {
     this.firebase.auth().signOut()
   }
 
-  async createFakeUser(name, avatar, latitude, longitude){
-    const location = new firebase.firestore.GeoPoint(latitude, longitude)
-    await this.usersRef.add({
-      name,
-      fake: true,
-      candie: true,
-      avatar,
-      geohash: encodeGeohash([location.latitude, location.longitude]),
-      location
-    })
-  }
-
-  async createUser(){
-    await this.usersRef.doc(this.userId).set({
-      name: "Alexandre",
-      avatar: "https://avatars2.githubusercontent.com/u/1518223?s=460&v=4"
-    }, {merge: true})
-    await this.getUser()
-  }
-
-  async updateUser(data){
-    await this.usersRef.doc(this.userId).set(data, {merge: true})
-    await this.getUser()
-  }
-
   async getUser(){
-    const doc = await this.usersRef.doc(this.userId).get()
-    if(doc.exists)
-      this.user = doc.data()
-    else
-      this.user = null
+    await new Promise(resolve => {
+      index.getObject(this.userId, (err, user) => {
+        this.user = user
+        resolve()
+      })
+    })
   }
 
   createMessages(roomId, messages){
     for(const message of messages){
       const msg = {
         ...message,
-        user: {
-          _id: this.userId
-        },
+        userId: this.userId,
         createdAt: this.firebase.firestore.FieldValue.serverTimestamp(),
       }
-      delete msg._id 
       this.roomsRef.doc(roomId).collection("messages").add(msg)
       if(message.image || message.location)
         this.updateRoom(roomId, "[Anexo]")
@@ -133,11 +106,10 @@ export default class Firechat {
       const data = doc.data({serverTimestamps: 'estimate'})
       const message = {
         ...data,
-        _id: doc.id,
         createdAt: data.createdAt || new Date(),
         sent
       }
-      if(data.user._id != this.userId && !data.received){
+      if(data.userId != this.userId && !data.received){
         batch.update(doc.ref, {received: true})
         message.received = true
       }
@@ -231,9 +203,9 @@ export default class Firechat {
           const data = doc.data({serverTimestamps: 'estimate'})
           for(let user in data.users){
             if(user != this.userId){
-              this.usersRef.doc(user).get().then(anotherUser => {
+              index.getObject(user, (err, anotherUser) => {
                 let room = {
-                  anotherUser: anotherUser.data()
+                  anotherUser
                 }
                 room.notifications = data.notifications
                 room.lastMessage = data.lastMessage
@@ -254,18 +226,6 @@ export default class Firechat {
         })
         cb(rooms)
       })
-    })
-  }
-
-  async getUsersNearby(radius){
-    return await getDocumentsNearby(this.usersRef.where("fake","==",true), [this.user.location.latitude, this.user.location.longitude], radius)
-  }
-
-  async updatetUserLocation(latitude, longitude){
-    const location = new this.firebase.firestore.GeoPoint(latitude, longitude)
-    await this.updateUser({
-      geohash: encodeGeohash([location.latitude, location.longitude]),
-      location
     })
   }
 

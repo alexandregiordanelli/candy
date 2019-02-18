@@ -1,6 +1,4 @@
 import { Navigation } from "react-native-navigation"
-import { createStore, combineReducers } from 'redux'
-import { Provider } from "react-redux"
 import Firechat from "./Firechat"
 import Login from "./Login"
 import Payments from './Payments'
@@ -15,21 +13,13 @@ import { goLogin, goHome, goHomeForCandies } from './navigation'
 
 console.disableYellowBox = true
 
-const rooms = (state = [], action) => {
-  if(action.type == 'ADD_ROOMS')
-    return action.rooms
-  return state
-}
-
-const store = createStore(combineReducers({rooms}))
-
 Navigation.registerComponent('Payments', () => Payments)
-Navigation.registerComponentWithRedux('CreditCard', () => CreditCard, Provider, store)
-Navigation.registerComponentWithRedux('Login', () => Login, Provider, store)
-Navigation.registerComponentWithRedux('Home', () => Home, Provider, store)
-Navigation.registerComponentWithRedux('Messages', () => Messages, Provider, store)
-Navigation.registerComponentWithRedux('Chat', () => Chat, Provider, store)
-Navigation.registerComponentWithRedux('Profile', () => Profile, Provider, store)
+Navigation.registerComponent('CreditCard', () => CreditCard)
+Navigation.registerComponent('Login', () => Login)
+Navigation.registerComponent('Home', () => Home)
+Navigation.registerComponent('Messages', () => Messages)
+Navigation.registerComponent('Chat', () => Chat)
+Navigation.registerComponent('Profile', () => Profile)
 Navigation.registerComponent('RightButton', () => RightButton)
 
 Navigation.events().registerAppLaunchedListener(() => {

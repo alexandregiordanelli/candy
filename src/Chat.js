@@ -68,12 +68,8 @@ export default class extends React.Component {
   firechat = new Firechat
   offset = 44 + 20
 
-  removeDuplicates = (myArr, prop) => {
-    return myArr.filter((obj, pos, arr) => arr.map(mapObj => mapObj[prop]).indexOf(obj[prop]) === pos)
-  }
-
   async componentWillMount(){
-    this.roomId = this.props.roomId? this.props.roomId: await this.firechat.getRoom(this.props.user.id)
+    this.roomId = this.props.roomId? this.props.roomId: await this.firechat.getRoom(this.props.user.objectID)
     if(this.roomId)
       this.subscribe(this.roomId)
   }
@@ -85,8 +81,8 @@ export default class extends React.Component {
 
   subscribe = roomId => {
     this.unsubscribe = this.firechat.getOnMessages(roomId, ({messages, cursor}) => {
-      const newMessages = this.removeDuplicates(messages.concat(this.state.messages), "_id").sort((a,b)=>b.createdAt - a.createdAt)
-      this.storeMessages(newMessages, cursor).then(()=>{
+      //const newMessages = messages.concat(this.state.messages)
+      this.storeMessages(messages, cursor).then(()=>{
 
       })
     }) 
@@ -95,7 +91,7 @@ export default class extends React.Component {
   onLoadEarlier = () => {
     this.setState({isLoadingEarlier: true }) 
     this.firechat.getMessages(this.roomId, this.cursor).then(({messages, cursor}) => {
-      const newMessages = this.removeDuplicates(messages.concat(this.state.messages), "_id").sort((a,b)=>b.createdAt - a.createdAt)
+      const newMessages = messages.concat(this.state.messages)
       this.storeMessages(newMessages, cursor)   
     })
   }
@@ -149,13 +145,11 @@ export default class extends React.Component {
         return
     }
     if(!this.roomId){
-      this.roomId = await this.firechat.createRoom(this.props.user.id)
+      this.roomId = await this.firechat.createRoom(this.props.user.objectID)
       this.subscribe(this.roomId)
     }
 
     this.firechat.createMessages(this.roomId, messages)
-    //this.refs.flatList1.scrollToEnd({ animated: true })
-    //KeyboardUtils.dismiss()
   }
  
   getToolbarButtons = () => {
@@ -169,11 +163,11 @@ export default class extends React.Component {
   }
 
   resetKeyboardView = () => {
-    this.setState({customKeyboard: {}});
+    this.setState({customKeyboard: {}})
   }
 
   onKeyboardResigned = () => {
-    this.resetKeyboardView();
+    this.resetKeyboardView()
   }
 
   showKeyboardView = (component, title) => {
@@ -182,7 +176,7 @@ export default class extends React.Component {
         component,
         initialProps: {title},
       },
-    });
+    })
   }
 
   keyboardAccessoryViewContent = () => {
@@ -221,7 +215,7 @@ export default class extends React.Component {
           }
         </View>
       </InnerContainerComponent>
-    );
+    )
   }
 
   render() {
@@ -240,9 +234,9 @@ export default class extends React.Component {
             )
           }}    
           sections={this.state.messagesInSections}
-          keyExtractor={item => item._id}
+          keyExtractor={(item, index) => item + index}
           renderItem={({ item, index, section, separators }) => {
-            const me = item.user._id == this.firechat.userId? 'right': 'left'
+            const me = item.userId == this.firechat.userId? 'right': 'left'
             return (
               <View style={[styles.bubble, styles[me]]}>
                 <Text style={styles.text}>{item.text}</Text>
