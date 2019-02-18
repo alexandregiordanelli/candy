@@ -1,8 +1,6 @@
 import { Navigation } from "react-native-navigation"
 import Firechat from "./Firechat"
 import Login from "./Login"
-import Payments from './Payments'
-import CreditCard from "./CreditCard"
 import Home from "./Home"
 import Messages from "./Messages"
 import Chat from "./Chat"
@@ -13,8 +11,6 @@ import { goLogin, goHome, goHomeForCandies } from './navigation'
 
 console.disableYellowBox = true
 
-Navigation.registerComponent('Payments', () => Payments)
-Navigation.registerComponent('CreditCard', () => CreditCard)
 Navigation.registerComponent('Login', () => Login)
 Navigation.registerComponent('Home', () => Home)
 Navigation.registerComponent('Messages', () => Messages)

@@ -7,8 +7,7 @@ import {
   TouchableOpacity
 } from 'react-native'
 import Firechat from './Firechat'
-import { InstantSearch } from 'react-instantsearch-native'
-import { connectInfiniteHits, Configure } from 'react-instantsearch-native'
+import { InstantSearch, connectInfiniteHits, Configure } from 'react-instantsearch-native'
 
 const Hits = connectInfiniteHits(({ hits, hasMore, refine, componentId }) => {
 
@@ -62,26 +61,26 @@ export default class extends React.Component {
     this.firechat = new Firechat
   }
 
-  componentDidMount() {
+  // componentDidMount() {
 
-    Navigation.showModal({
-      stack: {
-        children: [{
-          component: {
-            name: 'CreditCard',
-            options: {
-              topBar: {
-                title: {
-                  text: 'Cartão de Crédito'
-                }
-              }
-            }
-          }
-        }]
-      }
-    })
+  //   Navigation.showModal({
+  //     stack: {
+  //       children: [{
+  //         component: {
+  //           name: 'CreditCard',
+  //           options: {
+  //             topBar: {
+  //               title: {
+  //                 text: 'Cartão de Crédito'
+  //               }
+  //             }
+  //           }
+  //         }
+  //       }]
+  //     }
+  //   })
 
-  }
+  // }
 
   
 

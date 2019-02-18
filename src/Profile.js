@@ -73,38 +73,8 @@ export default class Profile extends React.Component {
             color="#fff" 
             />
           </TouchableOpacity>
-          <TouchableOpacity 
-          style={{width: 60, height: 60, borderRadius: 30, backgroundColor: '#222', justifyContent: 'center', alignItems: 'center', margin: 30}}
-          onPress={() => Navigation.pop(this.props.componentId)}
-          >
-            <Icon 
-            name="credit-card" size={20} 
-            color="#fff" 
-            />
-          </TouchableOpacity>
         </View>}
-        {!this.props.user && <Button
-          color='#fc6157'
-          onPress={() => {
-            Navigation.showModal({
-              stack: {
-                children: [{
-                  component: {
-                    name: 'CreditCard',
-                    options: {
-                      topBar: {
-                        title: {
-                          text: 'Cartão de Crédito'
-                        }
-                      }
-                    }
-                  }
-                }]
-              }
-            })
-          }}
-          title="Cartão de Crédito"
-        />}
+      
         {!this.props.user && <Button
           color='#fc6157'
           onPress={() => this.firechat.signOut()}

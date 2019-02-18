@@ -63,26 +63,6 @@ export const goHome = async () => Navigation.setRoot({
           stack: {
             children: [{
               component: {
-                name: 'Payments',
-                options: {
-                  topBar: {
-                    title: {
-                      text: 'Pagamentos',
-                    },
-                  },
-                  bottomTab: {
-                    icon: await Icon.getImageSource('credit-card', 20),
-                    text: "Pagamentos",
-                  },
-                }
-              },
-            }],
-          }
-        },
-        {
-          stack: {
-            children: [{
-              component: {
                 name: 'Profile',
                 options: {
                   bottomTab: {
@@ -122,26 +102,6 @@ export const goHomeForCandies = async () => Navigation.setRoot({
                 }
               },
             }]
-          }
-        },
-        {
-          stack: {
-            children: [{
-              component: {
-                name: 'Payments',
-                options: {
-                  topBar: {
-                    title: {
-                      text: 'Pagamentos',
-                    },
-                  },
-                  bottomTab: {
-                    icon: await Icon.getImageSource('credit-card', 20),
-                    text: "Pagamentos",
-                  },
-                }
-              },
-            }],
           }
         },
         {

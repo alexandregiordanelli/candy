@@ -203,17 +203,6 @@ export default class extends React.Component {
           </TouchableOpacity>
         </View>
 
-        <View style={{flexDirection: 'row'}}>
-          {
-            this.getToolbarButtons().map((button, index) => {
-              return (
-                <TouchableOpacity onPress={button.onPress} style={{paddingLeft: 15, paddingBottom: 10}} key={index} testID={button.testID}>
-                  <Text style={{color:'white'}}>{button.text}</Text>
-                </TouchableOpacity>
-              )
-            })
-          }
-        </View>
       </InnerContainerComponent>
     )
   }
