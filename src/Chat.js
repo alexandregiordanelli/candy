@@ -8,20 +8,17 @@ import {
   Platform,
   TouchableOpacity,
   PixelRatio,
-  Dimensions,
 } from 'react-native'
 import Icon from "react-native-vector-icons/Ionicons"
 
 import moment from 'moment'
 import "moment/locale/pt-br"
 
-import {AutoGrowingTextInput} from 'react-native-autogrow-textinput';
-import {BlurView} from 'react-native-blur';
-import {KeyboardAccessoryView, KeyboardUtils} from 'react-native-keyboard-input';
+import {AutoGrowingTextInput} from 'react-native-autogrow-textinput'
+import {BlurView} from 'react-native-blur'
+import {KeyboardAccessoryView} from 'react-native-keyboard-input'
 
-import './demoKeyboards';
-
-const IsIOS = Platform.OS === 'ios';
+const IsIOS = Platform.OS === 'ios'
 
 export default class extends React.Component {
   
@@ -152,31 +149,8 @@ export default class extends React.Component {
     this.firechat.createMessages(this.roomId, messages)
   }
  
-  getToolbarButtons = () => {
-    return [
-      {
-        text: 'Fazer pagamento',
-        testID: 'show2',
-        onPress: () => this.showKeyboardView('Payment', 'SECOND - 2 (passed prop)'),
-      },
-    ];
-  }
-
   resetKeyboardView = () => {
     this.setState({customKeyboard: {}})
-  }
-
-  onKeyboardResigned = () => {
-    this.resetKeyboardView()
-  }
-
-  showKeyboardView = (component, title) => {
-    this.setState({
-      customKeyboard: {
-        component,
-        initialProps: {title},
-      },
-    })
   }
 
   keyboardAccessoryViewContent = () => {
@@ -247,7 +221,7 @@ export default class extends React.Component {
         kbComponent={this.state.customKeyboard.component}
         kbInitialProps={this.state.customKeyboard.initialProps}
         onItemSelected={this.onKeyboardItemSelected}
-        onKeyboardResigned={this.onKeyboardResigned}
+        onKeyboardResigned={this.resetKeyboardView}
         requiresSameParentToManageScrollView={true}
         scrollIsInverted={true}
         revealKeyboardInteractive={false}
@@ -259,6 +233,16 @@ export default class extends React.Component {
 }
 
 const styles = StyleSheet.create({
+  trackingToolbarContainer: {
+    ...Platform.select({
+      ios: {
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        right: 0,
+      },
+    }),
+  },
   text: {
     color: 'white',
     margin: 8,
